@@ -22,6 +22,8 @@ pt1 = functionsHW2;
 % pt2 = functionsHW2(scFn);
 pt1.func = mnFn;
 pt1.optimalVal = sol;
+pt1.range = interval;
+pt1.eps = eps;
 % pt2.func = scFn;
 
 %large matrix initialize
@@ -33,12 +35,12 @@ gsResults = zeros(3);
 % Results = zeros(3,3,3);
 %% Bisection
 j=1;
-% for value=eps
+for value=eps
     tic
-    biResults = pt1.Bisection(interval(1), interval(2), eps(j));
+    biResults(j,:) = pt1.Bisection(j).biRes;
     TimeMatrix(n,j) = toc;
     j = j+1;
-% end
+end
 biResults
 
 

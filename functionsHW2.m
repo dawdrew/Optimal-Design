@@ -2,16 +2,22 @@
 classdef functionsHW2
     properties
         func
+        range
         optimalVal
+        biRes
+        eps
     end
     methods
-        function bi = Bisection(obj, highVal, lowVal, eps)
+        function obj = Bisection(obj,j)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 0;
             done = 0;
-            mid = highVal;
+            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
             opt = [obj.optimalVal];
+            highVal = [obj.range(1)];
+            lowVal  = [obj.range(2)];
+            eps = [obj.eps(j)];
 % step 1 is make sure bounds work
             while done == 0
                 iterations = iterations + 1;
@@ -35,8 +41,8 @@ classdef functionsHW2
                 end
                 iterations = iterations + 1;
             end
-            epsilonf, epsilonx = [abs(polyval(f,mid)-polyval(f,opt)/polyval(f,opt)), abs((mid-opt)/opt)]
-            bi = [epsilonf, epsilonx, iterations, sensitivity];
+            epsilon = [(abs(polyval(f,mid)-polyval(f,opt)/polyval(f,opt))), (abs((mid-opt)/opt))];
+            [obj.biRes] = [epsilon(1), epsilon(2), iterations, sensitivity];
         end
 
 
