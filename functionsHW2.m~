@@ -8,7 +8,7 @@ classdef functionsHW2
         eps
     end
     methods
-        function obj =Bisection(obj,j)
+        function obj = Bisection(obj,j)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 0;
@@ -18,6 +18,8 @@ classdef functionsHW2
             highVal = [obj.range(1)];
             lowVal  = [obj.range(2)];
             epsL = [obj.eps(j)];
+
+            
 % step 1 is make sure bounds work
             while done == 0
                 iterations = iterations + 1;
@@ -31,15 +33,24 @@ classdef functionsHW2
                     lowVal = lowVal+.01;   
                 end
             end
+            
+            mid = (lowVal+highVal)/2;
+            fn = abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt));
+            xn = abs((mid-opt)/opt);
+
+            
 % step 2 is to solve
-            while abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt)) <= epsL && abs((mid-opt)/opt) <= epsL
+            while (fn >= epsL) ||  xn>= epsL)
                 mid = (lowVal+highVal)/2;
                 if polyval(polyder(f),mid)>0
                     lowVal = mid;
+                    mid = (lowVal+highVal)/2;
                 else
                     highVal = mid;
+                    mid = (lowVal+highVal)/2;
                 end
                 iterations = iterations + 1;
+                abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt))
             end
             epsilon = [(abs(polyval(f,mid)-polyval(f,opt)/polyval(f,opt))), (abs((mid-opt)/opt))];
             [obj.biRes] = [epsilon(1), epsilon(2), iterations, sensitivity];

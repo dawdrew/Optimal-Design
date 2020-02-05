@@ -17,7 +17,9 @@ classdef functionsHW2
             opt = [obj.optimalVal];
             highVal = [obj.range(1)];
             lowVal  = [obj.range(2)];
-            epsL = [obj.eps(j)]
+            epsL = [obj.eps(j)];
+
+            
 % step 1 is make sure bounds work
             while done == 0
                 iterations = iterations + 1;
@@ -32,17 +34,28 @@ classdef functionsHW2
                 end
             end
             
-            % step 2 is to solve
-            while abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt)) >= epsL && abs((mid-opt)/opt) >= epsL
+            mid = (lowVal+highVal)/2;
+            fn = abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt));
+            xn = abs((mid-opt)/opt);
+
+            
+% step 2 is to solve
+            while (fn > epsL) || (xn > epsL)
                 mid = (lowVal+highVal)/2;
                 if polyval(polyder(f),mid)>0
                     lowVal = mid;
+                    mid = (lowVal+highVal)/2;
+                    fn = abs((polyval(f,mid) - polyval(f,opt)) / polyval(f,opt));
+                    xn = abs((mid - opt) / opt);
                 else
                     highVal = mid;
+                    mid = (lowVal+highVal)/2;
+                    fn = abs((polyval(f,mid) - polyval(f,opt)) / polyval(f,opt));
+                    xn = abs((mid - opt) / opt);
                 end
                 iterations = iterations + 1;
             end
-            epsilon = [(abs(polyval(f,mid)-polyval(f,opt)/polyval(f,opt))), (abs((mid-opt)/opt))];
+            epsilon = [fn, xn];
             [obj.biRes] = [epsilon(1), epsilon(2), iterations, sensitivity];
         end
 
