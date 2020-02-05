@@ -1,0 +1,47 @@
+%% Andrew Rearson MECE 620.01 Intro To Optimal Design
+clc;
+clear;
+n = 1;
+%% Function Definition
+mainFunction = @(x) 0.0048*x^4+0
+
+%% Bisection
+tic;
+biResults() = Bisection(x, eps, funct);
+
+
+
+
+TimeMatric(n)=toc;
+n=n + 1;
+%% Powell's Method
+tic;
+
+
+
+
+
+
+TimeMatric(n)=toc;
+n=n + 1;
+%% Cubic Search
+tic;
+
+
+
+
+
+
+
+
+TimeMatric(n)=toc;
+n=n + 1;
+%% Golden Section
+tic;
+
+
+
+
+
+
+TimeMatric(n)=toc;
