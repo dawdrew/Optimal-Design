@@ -17,7 +17,7 @@ classdef functionsHW2
             opt = [obj.optimalVal];
             highVal = [obj.range(1)];
             lowVal  = [obj.range(2)];
-            eps = [obj.eps(j)];
+            epsL = [obj.eps(j)]
 % step 1 is make sure bounds work
             while done == 0
                 iterations = iterations + 1;
@@ -31,8 +31,9 @@ classdef functionsHW2
                     lowVal = lowVal+.01;   
                 end
             end
-% step 2 is to solve
-            while abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt)) <= eps && abs((mid-opt)/opt) <= eps
+            
+            % step 2 is to solve
+            while abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt)) >= epsL && abs((mid-opt)/opt) >= epsL
                 mid = (lowVal+highVal)/2;
                 if polyval(polyder(f),mid)>0
                     lowVal = mid;

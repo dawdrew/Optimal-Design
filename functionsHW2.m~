@@ -5,15 +5,19 @@ classdef functionsHW2
         range
         optimalVal
         biRes
+        eps
     end
     methods
-        function obj = Bisection(obj)
+        function obj =Bisection(obj,j)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 0;
             done = 0;
-            mid = [nargin+;
+            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
             opt = [obj.optimalVal];
+            highVal = [obj.range(1)];
+            lowVal  = [obj.range(2)];
+            epsL = [obj.eps(j)];
 % step 1 is make sure bounds work
             while done == 0
                 iterations = iterations + 1;
@@ -28,7 +32,7 @@ classdef functionsHW2
                 end
             end
 % step 2 is to solve
-            while abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt)) <= eps && abs((mid-opt)/opt) <= eps
+            while abs((polyval(f,mid)-polyval(f,opt))/polyval(f,opt)) <= epsL && abs((mid-opt)/opt) <= epsL
                 mid = (lowVal+highVal)/2;
                 if polyval(polyder(f),mid)>0
                     lowVal = mid;

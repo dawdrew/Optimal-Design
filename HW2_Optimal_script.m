@@ -33,6 +33,8 @@ powellResults = zeros(3);
 cubicResults = zeros(3);
 gsResults = zeros(3);
 % Results = zeros(3,3,3);
+
+
 %% Bisection
 j=1;
 for value=eps
