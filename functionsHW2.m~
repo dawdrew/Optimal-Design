@@ -67,13 +67,12 @@ classdef functionsHW2
             sensitivity = 0;
             iterations  = 1;
             done = 0;
-            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
             opt = [obj.optimalVal];
             highVal = [obj.range(1)];
             lowVal  = [obj.range(2)];
             epsL = [obj.eps(j)];
             x1 = highVal;
-            x2 = mid;
+            x2 = lowVal;
             x3 = lowVal;
             f1 = polyval(f,x1);
             f2 = polyval(f,x2);
@@ -116,7 +115,6 @@ classdef functionsHW2
 
         end
 %% Cubic  
-        function [epsilon, iterations, sensitivity] = Cubic(x,eps, funct)
         function obj = Powell(obj, j)
             f = [obj.func];
             sensitivity = 0;
@@ -128,11 +126,10 @@ classdef functionsHW2
             lowVal  = [obj.range(2)];
             epsL = [obj.eps(j)];
             x1 = highVal;
-            x2 = mid;
-            x3 = lowVal;
+            x2 = lowVal;
             f1 = polyval(f,x1);
+            
             f2 = polyval(f,x2);
-            f3 = polyval(f,x3);
             a0 = f1;
             a1 = (f2-f1)/(x2-x1);
             a2 = ((f3-f1)/(x3-x1) - (f2-f1)/(x2-x1)) / (x3-x2);

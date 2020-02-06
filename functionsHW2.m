@@ -6,6 +6,7 @@ classdef functionsHW2
         optimalVal
         biRes
         powRes
+        cubRes
         eps
     end
     methods
@@ -67,13 +68,12 @@ classdef functionsHW2
             sensitivity = 0;
             iterations  = 1;
             done = 0;
-            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
             opt = [obj.optimalVal];
             highVal = [obj.range(1)];
             lowVal  = [obj.range(2)];
             epsL = [obj.eps(j)];
             x1 = highVal;
-            x2 = mid;
+            x2 = lowVal;
             x3 = lowVal;
             f1 = polyval(f,x1);
             f2 = polyval(f,x2);
@@ -84,8 +84,9 @@ classdef functionsHW2
             xS = (x1+x2) / 2 - a1/(2*a2);
             FS = polyval(f,xS);
             fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
-            xn = abs((xS - opt) / opt);
-           
+            xn = abs((xS - opt) / opt);            
+            
+% -----------------------------Reassign here---------------------------%           
             while (FS > epsL) || (xn > epsL)
                if xS>x2
                    x1 = x2;
@@ -108,15 +109,12 @@ classdef functionsHW2
 
                 iterations = iterations + 1;
             end
+            
+            
             [obj.powRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
-
-
-
-
-
         end
 %% Cubic  
-        function obj = Powell(obj, j)
+        function obj = Cubic(obj, j)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 1;
