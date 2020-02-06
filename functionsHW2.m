@@ -165,7 +165,7 @@ classdef functionsHW2
         function obj = GoldenSec(obj, j)
             f = [obj.func];
             sensitivity = 0;
-            iterations  = 1; 
+            iterations  = 0; 
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
             lowVal  = [obj.range(1)];
@@ -177,30 +177,44 @@ classdef functionsHW2
             t  = .38197;
             x1 = (1-t)*xL+t*xR;
             x2 = t*xL+(1-t)*xR;
-
-            n = 30;
-            table = zeros(n,7);
+            fx1 = polyval(f,x1);
+            fx2 = polyval(f,x2);
+            n = 1000;
+%             table = zeros(n,7);
             for i = 1:n
-                fx1 = polyval(f,x1);
-                fx2 = polyval(f,x2);
+            if (xR-xL)>=epsL
+% i=iterations;
 
                 if fx1<fx2
                     table(i,:) = [iterations, x1, fx1, xL, x1, x2, xR];
-                    xR = x1;
+                    xR = x2;
+                    x2 = x1;
+                    xL=xL;
                     x1 = (1-t)*xL+t*xR;
+                    
                 else
                     table(i,:) = [iterations, x2, fx2, xL, x1, x2, xR];
-                    xL = x2;
+                    xL = x1;
+                    x1 = x2;
+                    xR=xR;
                     x2 = t*xL+(1-t)*xR;
                 end
-
+                fx1 = polyval(f,x1);
+                fx2 = polyval(f,x2);
+                
                 iterations = iterations + 1;
+            else
+                break
             end
+            end
+            
+            table = table(any(table,2),:)
             [obj.gsTABLE] = table;
-            table
-            mini = max(min(table(:,3)));
-            [x,y] = find(table == mini)
-            xS = table(x-1,y)
+
+            mini = (min(table(:,3)))
+            [a,b] = find(table == mini)
+            xS = table(a(end),b(end)-1)
+            xTEST = (xR+xL)/2
             FS = polyval(f,xS);
             fn = abs((FS - polyval(f,opt)) / polyval(f,opt));
             xn = abs((xS - opt) / opt);
