@@ -7,6 +7,7 @@ classdef functionsHW2
         biRes
         powRes
         cubRes
+        gsRes
         eps
     end
     methods
@@ -69,11 +70,12 @@ classdef functionsHW2
             iterations  = 1;
             done = 0;
             opt = [obj.optimalVal];
-            highVal = [obj.range(1)];
-            lowVal  = [obj.range(2)];
+            highVal = [obj.range(2)];
+            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
+            lowVal  = [obj.range(1)];
             epsL = [obj.eps(j)];
             x1 = highVal;
-            x2 = lowVal;
+            x2 = mid;
             x3 = lowVal;
             f1 = polyval(f,x1);
             f2 = polyval(f,x2);
@@ -84,10 +86,9 @@ classdef functionsHW2
             xS = (x1+x2) / 2 - a1/(2*a2);
             FS = polyval(f,xS);
             fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
-            xn = abs((xS - opt) / opt);            
-            
-% -----------------------------Reassign here---------------------------%           
-            while (FS > epsL) || (xn > epsL)
+            xn = abs((xS - opt) / opt);
+          
+            while (fn > epsL) || (xn > epsL)
                if xS>x2
                    x1 = x2;
                    x2 = xS;
@@ -110,45 +111,88 @@ classdef functionsHW2
                 iterations = iterations + 1;
             end
             
-            
+% -----------------------------Reassign here---------------------------%             
             [obj.powRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
         end
 %% Cubic  
         function obj = Cubic(obj, j)
             f = [obj.func];
             sensitivity = 0;
-            iterations  = 1;
-            done = 0;
-            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
+            iterations  = 0;
             opt = [obj.optimalVal];
-            highVal = [obj.range(1)];
-            lowVal  = [obj.range(2)];
+            highVal = [obj.range(2)];
+            lowVal  = [obj.range(1)];
             epsL = [obj.eps(j)];
-            x1 = highVal;
-            x2 = lowVal;
-            f1 = polyval(f,x1);
+            x1 = lowVal;
+            x2 = highVal;
+            xn = 100;
+            fn = 100;
             
-            f2 = polyval(f,x2);
-            a0 = f1;
-            a1 = (f2-f1)/(x2-x1);
-            a2 = ((f3-f1)/(x3-x1) - (f2-f1)/(x2-x1)) / (x3-x2);
-            xS = (x1+x2) / 2 - a1/(2*a2);
-            FS = polyval(f,xS);
-            fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
-            xn = abs((xS - opt) / opt);
+            while (fn > epsL) || (xn > epsL)
+                f1 = polyval(f,x1);
+                fp1 = polyval(polyder(f),x1);
+                f2 = polyval(f,x2);
+                fp2 = polyval(polyder(f),x2);
+                a0 = f1;
+                a1 = (f2-f1)/(x2-x1);
+                a2 = (fp1-a1)/(x1-x2);
+                a3 = (fp2-a1-a2*(x2-x1))/(x2-x1)^2;
 
+    %             FS = @(x) a0+a1*(x-x1)+a2*(x-x1)*(x-x2)+a3*(x-x1).^2*(x-x2);
+                FpS = @(m) a1+a2.*(m-x1)+a2.*(m-x2)+a3.*(m-x1).^2+2.*a3.*(m-x2).*(m-x1).^2;
+%                 fplot(FpS,limits)
+                xS = fzero(FpS,x1);
+                fpxS = polyval(polyder(f),xS);
+                FS = polyval(f,xS);
+                
+                if fpxS >= 0
+                    x2 = xS;
+                else
+                    x1 = xS;
+                end
 
-
+                fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
+                xn = abs((xS - opt) / opt);
+                iterations = iterations +1;
+            end
+            
+% -----------------------------Reassign here---------------------------% 
+[obj.cubRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
 
         end
 %% Golden Sec
-%         function [epsilon, iterations, sensitivity] = GoldenSec(x,eps, funct)
-% 
-% 
-% 
-% 
-% 
-%         end
+        function obj = GoldenSec(obj, j)
+            f = [obj.func];
+            sensitivity = 0;
+            iterations  = 0; 
+            opt = [obj.optimalVal];
+            highVal = [obj.range(2)];
+            lowVal  = [obj.range(1)];
+            epsL = [obj.eps(j)];
+            limits = [obj.range];
+            
+            
+            xL = lowVal;
+            xR = highVal;
+            t  = 1.61803;
+            
+            
+            
+            
+            xn = 100;
+            fn = 100;
+            
+            while (fn > epsL) || (xn > epsL)
+
+                fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
+                xn = abs((xS - opt) / opt);
+                iterations = iterations +1;
+            end
+            
+% -----------------------------Reassign here---------------------------% 
+[obj.gsRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
+
+        end
 
     end
 end
