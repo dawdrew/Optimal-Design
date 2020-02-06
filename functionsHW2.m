@@ -1,6 +1,7 @@
 %% this is a function file for each of the methods
 classdef functionsHW2
     properties
+        eps
         func
         range
         optimalVal
@@ -8,21 +9,31 @@ classdef functionsHW2
         powRes
         cubRes
         gsRes
-        eps
         gsTABLE
     end
     methods
+% %{
+%% initial function
+        function obj = functionsHW2(epsil, func,sol,interval)
+            if nargin == 4
+                obj.eps = epsil;
+                obj.func = func;
+                obj.optimalVal = sol;
+                obj.range = interval;
+            end
+        end
+    
+%}        
 %% Bisection
-        function obj = Bisection(obj,j)
+        function obj = Bisection(obj)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 0;
             done = 0;
-            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
             lowVal  = [obj.range(1)];
-            epsL = [obj.eps(j)];
+            epsL = [obj.eps];
 
             
 % step 1 is make sure bounds work
@@ -61,11 +72,11 @@ classdef functionsHW2
                 iterations = iterations + 1;
             end
 % -----------------------------Reassign here---------------------------%
-            [obj.biRes] = [fn, xn, iterations, sensitivity, polyval(f,mid), mid, 0];
+            obj.biRes = [fn, xn, iterations, sensitivity, polyval(f,mid), mid, 0];
         end
 
 %% Powels 
-        function obj = Powell(obj, j)
+        function obj = Powell(obj)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 1;
@@ -74,7 +85,7 @@ classdef functionsHW2
             highVal = [obj.range(2)];
             mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
             lowVal  = [obj.range(1)];
-            epsL = [obj.eps(j)];
+            epsL = [obj.eps];
             x1 = highVal;
             x2 = mid;
             x3 = lowVal;
@@ -116,14 +127,14 @@ classdef functionsHW2
             [obj.powRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
         end
 %% Cubic  
-        function obj = Cubic(obj, j)
+        function obj = Cubic(obj)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 0;
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
             lowVal  = [obj.range(1)];
-            epsL = [obj.eps(j)];
+            epsL = [obj.eps];
             x1 = lowVal;
             x2 = highVal;
             xn = 100;
@@ -162,14 +173,14 @@ classdef functionsHW2
 
         end
 %% Golden Sec
-        function obj = GoldenSec(obj, j)
+        function obj = GoldenSec(obj)
             f = [obj.func];
             sensitivity = 0;
             iterations  = 0; 
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
             lowVal  = [obj.range(1)];
-            epsL = [obj.eps(j)];
+            epsL = [obj.eps];
             limits = [obj.range];
                 
             xL = lowVal;
@@ -208,13 +219,13 @@ classdef functionsHW2
             end
             end
             
-            table = table(any(table,2),:)
+            table = table(any(table,2),:);
             [obj.gsTABLE] = table;
 
-            mini = (min(table(:,3)))
-            [a,b] = find(table == mini)
-            xS = table(a(end),b(end)-1)
-            xTEST = (xR+xL)/2
+            mini = (min(table(:,3)));
+            [a,b] = find(table == mini);
+            xS = table(a(end),b(end)-1);
+            xTEST = (xR+xL)/2;
             FS = polyval(f,xS);
             fn = abs((FS - polyval(f,opt)) / polyval(f,opt));
             xn = abs((xS - opt) / opt);

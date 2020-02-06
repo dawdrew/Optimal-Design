@@ -15,7 +15,7 @@ sol = fminbnd(mainFunction,interval(1),interval(2));
 Fsol = polyval(mnFn,sol);
 opt = [sol, Fsol]
 % Plots of function and ideal point
-figure
+% figure
 fplot(mainFunction, interval);
 hold on
 plot(opt(1),opt(2),'+');
@@ -31,11 +31,12 @@ plot(opt2(1),opt2(2),'o');
 
 
 % call class and pass the function
-pt1 = functionsHW2;
-pt1.func = mnFn;
-pt1.optimalVal = sol;
-pt1.range = interval;
-pt1.eps = eps;
+pt1 = functionsHW2(eps,mnFn,sol,interval);
+% pt1.func = mnFn;
+% pt1.optimalVal = sol;
+% pt1.range = interval;
+
+% pt1.eps = eps;
 % pt2.func = scFn;
 % pt2 = functionsHW2(scFn);
 
@@ -53,8 +54,9 @@ gsTable = zeros(3*30,6);
 %% Bisection
 j = 1;
 for value=eps
+    pt1.eps = value;
     tic
-    biResults(j,:) = pt1.Bisection(j).biRes;
+    biResults(j,:) = pt1.Bisection.biRes;
     biResults(j,end) = toc;
     j = j+1;
 end
@@ -66,8 +68,9 @@ n = n + 1;
 j = 1;
 
 for value=eps
+    pt1.eps = value;
     tic
-    powellResults(j,:) = pt1.Powell(j).powRes;
+    powellResults(j,:) = pt1.Powell.powRes;
     powellResults(j,end) = toc;
     j = j+1;
 end
@@ -80,7 +83,8 @@ j = 1;
 
 for value=eps
     tic
-    cubicResults(j,:) = pt1.Cubic(j).cubRes;
+    pt1.eps = value;
+    cubicResults(j,:) = pt1.Cubic.cubRes;
     cubicResults(j,end) = toc;
     j = j+1;
 end
@@ -90,8 +94,9 @@ n = n + 1;
 %% Golden Section
 j = 1;
 for value=eps
+    pt1.eps = value;
     tic
-    gsResults(j,:) = pt1.GoldenSec(j).gsRes;
+    gsResults(j,:) = pt1.GoldenSec.gsRes;
     gsResults(j,end) = toc;
     j = j+1;
 end
@@ -107,3 +112,4 @@ for j = 0:2
 %         out = [Results(j*4+i,6), Results(j*4+i,5)]
     end
 end
+hold off
