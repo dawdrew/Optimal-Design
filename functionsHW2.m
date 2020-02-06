@@ -9,6 +9,7 @@ classdef functionsHW2
         cubRes
         gsRes
         eps
+        gsTABLE
     end
     methods
 %% Bisection
@@ -164,33 +165,49 @@ classdef functionsHW2
         function obj = GoldenSec(obj, j)
             f = [obj.func];
             sensitivity = 0;
-            iterations  = 0; 
+            iterations  = 1; 
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
             lowVal  = [obj.range(1)];
             epsL = [obj.eps(j)];
             limits = [obj.range];
-            
-            
+                
             xL = lowVal;
             xR = highVal;
-            t  = 1.61803;
-            
-            
-            
-            
-            xn = 100;
-            fn = 100;
-            
-            while (fn > epsL) || (xn > epsL)
+            t  = .38197;
+            x1 = (1-t)*xL+t*xR;
+            x2 = t*xL+(1-t)*xR;
 
-                fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
-                xn = abs((xS - opt) / opt);
-                iterations = iterations +1;
+            n = 30;
+            table = zeros(n,7);
+            for i = 1:n
+                fx1 = polyval(f,x1);
+                fx2 = polyval(f,x2);
+
+                if fx1<fx2
+                    table(i,:) = [iterations, x1, fx1, xL, x1, x2, xR];
+                    xR = x1;
+                    x1 = (1-t)*xL+t*xR;
+                else
+                    table(i,:) = [iterations, x2, fx2, xL, x1, x2, xR];
+                    xL = x2;
+                    x2 = t*xL+(1-t)*xR;
+                end
+
+                iterations = iterations + 1;
             end
+            [obj.gsTABLE] = table;
+            table
+            mini = max(min(table(:,3)));
+            [x,y] = find(table == mini)
+            xS = table(x-1,y)
+            FS = polyval(f,xS);
+            fn = abs((FS - polyval(f,opt)) / polyval(f,opt));
+            xn = abs((xS - opt) / opt);
+           
             
 % -----------------------------Reassign here---------------------------% 
-[obj.gsRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
+    [obj.gsRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
 
         end
 

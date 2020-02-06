@@ -46,6 +46,7 @@ biResults = zeros(3,7);
 powellResults = zeros(3,7);
 cubicResults = zeros(3,7);
 gsResults = zeros(3,7);
+gsTable = zeros(3*30,6);
 % Results = zeros(3,3,3);
 
 
@@ -88,7 +89,13 @@ cubicResults
 n = n + 1;
 %% Golden Section
 j = 1;
-
+for value=eps
+    tic
+    gsResults(j,:) = pt1.GoldenSec(j).gsRes;
+    gsResults(j,end) = toc;
+    j = j+1;
+end
+gsResults
 
 
 %% Outputs
