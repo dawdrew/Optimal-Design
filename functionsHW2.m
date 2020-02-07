@@ -11,8 +11,7 @@ classdef functionsHW2
         gsRes
         gsTABLE
     end
-    methods
-% %{
+    methods    
 %% initial function
         function obj = functionsHW2(epsil, func,sol,interval)
             if nargin == 4
@@ -22,8 +21,7 @@ classdef functionsHW2
                 obj.range = interval;
             end
         end
-    
-%}        
+
 %% Bisection
         function obj = Bisection(obj)
             f = [obj.func];
@@ -80,7 +78,6 @@ classdef functionsHW2
             f = [obj.func];
             sensitivity = 0;
             iterations  = 1;
-            done = 0;
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
             mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
@@ -99,8 +96,8 @@ classdef functionsHW2
             FS = polyval(f,xS);
             fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
             xn = abs((xS - opt) / opt);
-          
-            while (fn > epsL) || (xn > epsL)
+          for limit = 1:9999
+            if (fn > epsL) || (xn > epsL)
                if xS>x2
                    x1 = x2;
                    x2 = xS;
@@ -121,11 +118,16 @@ classdef functionsHW2
                 xn = abs((xS - opt) / opt);
 
                 iterations = iterations + 1;
+            else
+                break
             end
+          end
+            
             
 % -----------------------------Reassign here---------------------------%             
             [obj.powRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
         end
+        
 %% Cubic  
         function obj = Cubic(obj)
             f = [obj.func];
@@ -172,6 +174,7 @@ classdef functionsHW2
 [obj.cubRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
 
         end
+        
 %% Golden Sec
         function obj = GoldenSec(obj)
             f = [obj.func];

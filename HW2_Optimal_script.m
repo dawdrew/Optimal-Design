@@ -32,13 +32,7 @@ plot(opt2(1),opt2(2),'o');
 
 % call class and pass the function
 pt1 = functionsHW2(eps,mnFn,sol,interval);
-% pt1.func = mnFn;
-% pt1.optimalVal = sol;
-% pt1.range = interval;
-
-% pt1.eps = eps;
-% pt2.func = scFn;
-% pt2 = functionsHW2(scFn);
+pt2 = functionsHW2(eps,scFN,sol2,interval);
 
 
 % large matrix initialize
@@ -50,7 +44,7 @@ gsResults = zeros(3,7);
 gsTable = zeros(3*30,6);
 % Results = zeros(3,3,3);
 
-
+% %{
 %% Bisection
 j = 1;
 for value=eps
@@ -62,7 +56,6 @@ for value=eps
 end
 biResults
 
-n = n + 1;
 %% Powell's Method
 
 j = 1;
@@ -76,7 +69,6 @@ for value=eps
 end
 powellResults
 
-n = n + 1;
 %% Cubic Search
 
 j = 1;
@@ -90,7 +82,6 @@ for value=eps
 end
 cubicResults
 
-n = n + 1;
 %% Golden Section
 j = 1;
 for value=eps
@@ -101,13 +92,36 @@ for value=eps
     j = j+1;
 end
 gsResults
-
+%}
+%% results2
+Results2 = zeros(16,7);
+% methods = ['Bisection', 'Powell', 'Cubic', 'GoldenSec'];
+% outputs = ['biRes', 'powRes', 'cubRes', 'gsRes'];
+j=1;
+for value=eps
+    pt2.eps = value;
+    tic
+    Results2(j+0,:) = pt2.Bisection.biRes;
+    Results2(j+0,end) = toc
+    tic
+    Results2(j+3,:) = pt2.Powell.powRes;
+    Results2(j+3,end) = toc
+    tic
+    Results2(j+6,:) = pt2.Cubic.cubRes;
+    Results2(j+6,end) = toc
+    tic
+    Results2(j+9,:) = pt2.GoldenSec.gsRes;
+    Results2(j+9,end) = toc
+j = j+1;    
+end
 
 %% Outputs
 Results = [biResults;powellResults;cubicResults;gsResults]
+Results2
 plotthings = ['^','v','<','>'];
 for j = 0:2
     for i = 1:4
+        plot(Results(j*4+i,6), Results(j*4+i,5),plotthings(j+1));
         plot(Results(j*4+i,6), Results(j*4+i,5),plotthings(j+1));
 %         out = [Results(j*4+i,6), Results(j*4+i,5)]
     end
