@@ -94,7 +94,7 @@ end
 gsResults
 %}
 %% results2
-Results2 = zeros(16,7);
+Results2 = zeros(12,7);
 % methods = ['Bisection', 'Powell', 'Cubic', 'GoldenSec'];
 % outputs = ['biRes', 'powRes', 'cubRes', 'gsRes'];
 j=1;
@@ -117,7 +117,7 @@ end
 
 %% Outputs
 Results = [biResults;powellResults;cubicResults;gsResults]
-Results2
+% Results2
 plotthings = ['^','v','<','>'];
 for j = 0:2
     for i = 1:4

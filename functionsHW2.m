@@ -141,8 +141,8 @@ classdef functionsHW2
             x2 = highVal;
             xn = 100;
             fn = 100;
-            
-            while (fn > epsL) || (xn > epsL)
+        for limit = 1:9999
+            if (fn > epsL) || (xn > epsL)
                 f1 = polyval(f,x1);
                 fp1 = polyval(polyder(f),x1);
                 f2 = polyval(f,x2);
@@ -168,7 +168,10 @@ classdef functionsHW2
                 fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
                 xn = abs((xS - opt) / opt);
                 iterations = iterations +1;
+            else
+                break
             end
+        end
             
 % -----------------------------Reassign here---------------------------% 
 [obj.cubRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
@@ -184,7 +187,6 @@ classdef functionsHW2
             highVal = [obj.range(2)];
             lowVal  = [obj.range(1)];
             epsL = [obj.eps];
-            limits = [obj.range];
                 
             xL = lowVal;
             xR = highVal;
