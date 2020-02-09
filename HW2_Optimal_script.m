@@ -116,8 +116,8 @@ j = j+1;
 end
 
 %% Outputs
+ % first equation
 Results = [biResults;powellResults;cubicResults;gsResults];
-
 plotthings = ['^','v','<','>'];
 for j = 0:2
     for i = 1:4
@@ -126,6 +126,8 @@ for j = 0:2
     end
 end
 format shortG
+
+% second equation
 Results2
 prtrs2 = [1,2,3,10,11,12];
 for L = prtrs2
