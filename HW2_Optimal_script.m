@@ -1,5 +1,5 @@
 %% Andrew Rearson MECE 620.01 Intro To Optimal Design
-clc;
+% clc;
 clear;
 format compact;
 n = 1;
@@ -26,7 +26,7 @@ scFN = [.1 ,+ 0.2 , - 6.5 , - 5];
 fplot(secondFunct,interval);
 sol2 = fminbnd(secondFunct,interval(1),interval(2));
 Fsol2 = polyval(scFN,sol2);
-opt2 = [sol2, Fsol2];
+opt2 = [sol2, Fsol2]
 plot(opt2(1),opt2(2),'o');
 
 
@@ -102,28 +102,38 @@ for value=eps
     pt2.eps = value;
     tic
     Results2(j+0,:) = pt2.Bisection.biRes;
-    Results2(j+0,end) = toc
+    Results2(j+0,end) = toc;
     tic
     Results2(j+3,:) = pt2.Powell.powRes;
-    Results2(j+3,end) = toc
+    Results2(j+3,end) = toc;
     tic
     Results2(j+6,:) = pt2.Cubic.cubRes;
-    Results2(j+6,end) = toc
+    Results2(j+6,end) = toc;
     tic
     Results2(j+9,:) = pt2.GoldenSec.gsRes;
-    Results2(j+9,end) = toc
+    Results2(j+9,end) = toc;
 j = j+1;    
 end
 
 %% Outputs
-Results = [biResults;powellResults;cubicResults;gsResults]
-% Results2
+Results = [biResults;powellResults;cubicResults;gsResults];
+
 plotthings = ['^','v','<','>'];
 for j = 0:2
     for i = 1:4
         plot(Results(j*4+i,6), Results(j*4+i,5),plotthings(j+1));
-        plot(Results(j*4+i,6), Results(j*4+i,5),plotthings(j+1));
 %         out = [Results(j*4+i,6), Results(j*4+i,5)]
     end
+end
+format shortG
+Results2
+prtrs2 = [1,2,3,10,11,12];
+for L = prtrs2
+    if L<=3
+        j = plotthings(1);
+    else
+        j = plotthings(2);
+    end
+        plot(Results2(L,6), Results2(L,5),j);
 end
 hold off

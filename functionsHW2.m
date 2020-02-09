@@ -69,8 +69,11 @@ classdef functionsHW2
                 end
                 iterations = iterations + 1;
             end
+            xS = mid;
+            FS = polyval(f,xS);
+            sensitivity = abs(xS/FS);
 % -----------------------------Reassign here---------------------------%
-            obj.biRes = [fn, xn, iterations, sensitivity, polyval(f,mid), mid, 0];
+            obj.biRes = [fn, xn, iterations, sensitivity, FS, xS, 0];
         end
 
 %% Powels 
@@ -123,7 +126,7 @@ classdef functionsHW2
             end
           end
             
-            
+        sensitivity = abs(xS/FS);    
 % -----------------------------Reassign here---------------------------%             
             [obj.powRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
         end
@@ -172,7 +175,7 @@ classdef functionsHW2
                 break
             end
         end
-            
+        sensitivity = abs(xS/FS);    
 % -----------------------------Reassign here---------------------------% 
 [obj.cubRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
 
@@ -229,11 +232,12 @@ classdef functionsHW2
 
             mini = (min(table(:,3)));
             [a,b] = find(table == mini);
-            xS = table(a(end),b(end)-1);
-            xTEST = (xR+xL)/2;
+%             xS = table(a(end),b(end)-1);
+            xS = (table(a(end),b(end)+4)+table(a(end),b(end)+1))/2;
             FS = polyval(f,xS);
             fn = abs((FS - polyval(f,opt)) / polyval(f,opt));
             xn = abs((xS - opt) / opt);
+            sensitivity = abs(xS/FS);
            
             
 % -----------------------------Reassign here---------------------------% 
