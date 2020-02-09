@@ -8,7 +8,7 @@ n = 1;
 interval = [-10, 10];
 eps = [.1 , .01, .001];
 
-% functions
+% functions and optimal value using fminbnd function
 mainFunction = @(x) 0.0048 * x.^4 + 0.0329 * x.^3 - 0.1283 * x.^2 - 2.7896 * x.^1 - 9.37301;
 mnFn = [0.0048, 0.0329, - 0.1283, - 2.7896, - 9.37301];
 sol = fminbnd(mainFunction,interval(1),interval(2));
