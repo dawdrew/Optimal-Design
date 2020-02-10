@@ -36,23 +36,20 @@ pt2 = functionsHW2(eps,scFN,sol2,interval);
 
 
 % large matrix initialize
-biResults = zeros(3,7);
-% TimeMatrix = zeros(4,3);
-powellResults = zeros(3,7);
-cubicResults = zeros(3,7);
-gsResults = zeros(3,7);
-gsTable = zeros(3*30,6);
-% Results = zeros(3,3,3);
+biResults = zeros(6,7);
+powellResults = zeros(6,7);
+cubicResults = zeros(6,7);
+gsResults = zeros(6,7);
+gsTable = zeros(6*30,6);
+
 
 % %{
 %% Bisection
 j = 1;
 for value=eps
     pt1.eps = value;
-    tic
-    biResults(j,:) = pt1.Bisection.biRes;
-    biResults(j,end) = toc;
-    j = j+1;
+    biResults(j:j+1,:) = pt1.Bisection.biRes;
+    j = j+2;
 end
 biResults
 
@@ -62,10 +59,8 @@ j = 1;
 
 for value=eps
     pt1.eps = value;
-    tic
-    powellResults(j,:) = pt1.Powell.powRes;
-    powellResults(j,end) = toc;
-    j = j+1;
+    powellResults(j:j+1,:) = pt1.Powell.powRes;
+    j = j+2;
 end
 powellResults
 
@@ -74,11 +69,9 @@ powellResults
 j = 1;
 
 for value=eps
-    tic
     pt1.eps = value;
-    cubicResults(j,:) = pt1.Cubic.cubRes;
-    cubicResults(j,end) = toc;
-    j = j+1;
+    cubicResults(j:j+1,:) = pt1.Cubic.cubRes;
+    j = j+2;
 end
 cubicResults
 
@@ -86,14 +79,13 @@ cubicResults
 j = 1;
 for value=eps
     pt1.eps = value;
-    tic
-    gsResults(j,:) = pt1.GoldenSec.gsRes;
-    gsResults(j,end) = toc;
-    j = j+1;
+    gsResults(j:j+1,:) = pt1.GoldenSec.gsRes;
+    j = j+2;
 end
 gsResults
 %}
 %% results2
+%{
 Results2 = zeros(12,7);
 % methods = ['Bisection', 'Powell', 'Cubic', 'GoldenSec'];
 % outputs = ['biRes', 'powRes', 'cubRes', 'gsRes'];
@@ -114,20 +106,21 @@ for value=eps
     Results2(j+9,end) = toc;
 j = j+1;    
 end
-
+%}
 %% Outputs
- % first equation
-Results = [biResults;powellResults;cubicResults;gsResults];
+% first equation
+Results = [biResults;powellResults;cubicResults;gsResults]
+% obj.output = [fn, xn, iterations, sensitivity, FS, xS, toc];
 plotthings = ['^','v','<','>'];
-for j = 0:2
-    for i = 1:4
-        plot(Results(j*4+i,6), Results(j*4+i,5),plotthings(j+1));
-%         out = [Results(j*4+i,6), Results(j*4+i,5)]
+for j = 0:3
+    for i = 1:6
+        plot(Results(j*6+i,6), Results(j*6+i,5),plotthings(j+1));
     end
 end
 format shortG
 
 % second equation
+%{
 Results2
 prtrs2 = [1,2,3,10,11,12];
 for L = prtrs2
@@ -139,3 +132,4 @@ for L = prtrs2
         plot(Results2(L,6), Results2(L,5),j);
 end
 hold off
+%}

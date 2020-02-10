@@ -1,8 +1,6 @@
-clc
-clear
-
-for j =1:3
-    for i= 1:4
-        x = (i)*(j+1)
+for j =0:3
+    for i= 1:6
+        [j,i]
+%         x = j*6+i
     end
 end

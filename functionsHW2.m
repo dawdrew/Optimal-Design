@@ -24,8 +24,9 @@ classdef functionsHW2
 
 %% Bisection
         function obj = Bisection(obj)
+            for iter = 1:2
+            tic
             f = [obj.func];
-            sensitivity = 0;
             iterations  = 0;
             done = 0;
             opt = [obj.optimalVal];
@@ -54,7 +55,8 @@ classdef functionsHW2
 
             
 % step 2 is to solve
-            while (fn > epsL) || (xn > epsL)
+            exit = [fn > epsL, xn > epsL];
+            while (exit(iter))
                 mid = (lowVal+highVal)/2;
                 if polyval(polyder(f),mid)<0
                     lowVal = mid;
@@ -68,18 +70,20 @@ classdef functionsHW2
                     xn = abs((mid - opt) / opt);
                 end
                 iterations = iterations + 1;
+                exit = [fn > epsL, xn > epsL];
             end
             xS = mid;
             FS = polyval(f,xS);
             sensitivity = abs(xS/FS);
 % -----------------------------Reassign here---------------------------%
-            obj.biRes = [fn, xn, iterations, sensitivity, FS, xS, 0];
-        end
-
+            obj.biRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
+            end
+    end
 %% Powels 
         function obj = Powell(obj)
+        for iter = 1:2
+            tic
             f = [obj.func];
-            sensitivity = 0;
             iterations  = 1;
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
@@ -99,8 +103,9 @@ classdef functionsHW2
             FS = polyval(f,xS);
             fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
             xn = abs((xS - opt) / opt);
-          for limit = 1:9999
-            if (fn > epsL) || (xn > epsL)
+            exit = [fn > epsL, xn > epsL];
+            for limit = 1:9999
+            if (exit(iter))
                if xS>x2
                    x1 = x2;
                    x2 = xS;
@@ -121,20 +126,23 @@ classdef functionsHW2
                 xn = abs((xS - opt) / opt);
 
                 iterations = iterations + 1;
-            else
+                exit = [fn > epsL, xn > epsL];
+                else
                 break
             end
-          end
+            end
             
         sensitivity = abs(xS/FS);    
 % -----------------------------Reassign here---------------------------%             
-            [obj.powRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
-        end
+            obj.powRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
         
+        end
+        end
 %% Cubic  
         function obj = Cubic(obj)
+        for iter = 1:2
+            tic
             f = [obj.func];
-            sensitivity = 0;
             iterations  = 0;
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
@@ -144,8 +152,9 @@ classdef functionsHW2
             x2 = highVal;
             xn = 100;
             fn = 100;
+            exit = [fn > epsL, xn > epsL];
         for limit = 1:9999
-            if (fn > epsL) || (xn > epsL)
+            if (exit(iter))
                 f1 = polyval(f,x1);
                 fp1 = polyval(polyder(f),x1);
                 f2 = polyval(f,x2);
@@ -171,20 +180,22 @@ classdef functionsHW2
                 fn = abs((polyval(f,xS) - polyval(f,opt)) / polyval(f,opt));
                 xn = abs((xS - opt) / opt);
                 iterations = iterations +1;
+                exit = [fn > epsL, xn > epsL];
             else
                 break
             end
         end
         sensitivity = abs(xS/FS);    
 % -----------------------------Reassign here---------------------------% 
-[obj.cubRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
-
+obj.cubRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
+        end
         end
         
 %% Golden Sec
         function obj = GoldenSec(obj)
+            for iter = 1:2
+            tic
             f = [obj.func];
-            sensitivity = 0;
             iterations  = 0; 
             opt = [obj.optimalVal];
             highVal = [obj.range(2)];
@@ -198,11 +209,12 @@ classdef functionsHW2
             x2 = t*xL+(1-t)*xR;
             fx1 = polyval(f,x1);
             fx2 = polyval(f,x2);
-            n = 1000;
-%             table = zeros(n,7);
+            n = 100;
+            fn  = 100;
+            xn = 100;
+            exit = [fn > epsL, xn > epsL];
             for i = 1:n
             if (xR-xL)>=epsL
-% i=iterations;
 
                 if fx1<fx2
                     table(i,:) = [iterations, x1, fx1, xL, x1, x2, xR];
@@ -222,6 +234,7 @@ classdef functionsHW2
                 fx2 = polyval(f,x2);
                 
                 iterations = iterations + 1;
+                exit = [fn > epsL, xn > epsL];
             else
                 break
             end
@@ -241,8 +254,8 @@ classdef functionsHW2
            
             
 % -----------------------------Reassign here---------------------------% 
-    [obj.gsRes] = [fn, xn, iterations, sensitivity, FS, xS, 0];
-
+    obj.gsRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
+            end
         end
 
     end
