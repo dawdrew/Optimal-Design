@@ -1,5 +1,5 @@
 %% Andrew Rearson MECE 620.01 Intro To Optimal Design
-% clc;
+clc;
 clear;
 format compact;
 n = 1;
@@ -15,11 +15,10 @@ sol = fminbnd(mainFunction,interval(1),interval(2));
 Fsol = polyval(mnFn,sol);
 opt = [sol, Fsol]
 % Plots of function and ideal point
-% figure
+% p = figure;
 fplot(mainFunction, interval);
 hold on
 plot(opt(1),opt(2),'+');
-
 % second function stuff
 secondFunct = @(q) .1 * q.^3 + 0.2 * q.^2 - 6.5 * q - 5;
 scFN = [.1 ,+ 0.2 , - 6.5 , - 5];
@@ -85,51 +84,49 @@ end
 gsResults
 %}
 %% results2
-%{
-Results2 = zeros(12,7);
+% %{
+Results2 = zeros(24,7);
 % methods = ['Bisection', 'Powell', 'Cubic', 'GoldenSec'];
 % outputs = ['biRes', 'powRes', 'cubRes', 'gsRes'];
 j=1;
 for value=eps
     pt2.eps = value;
-    tic
-    Results2(j+0,:) = pt2.Bisection.biRes;
-    Results2(j+0,end) = toc;
-    tic
-    Results2(j+3,:) = pt2.Powell.powRes;
-    Results2(j+3,end) = toc;
-    tic
-    Results2(j+6,:) = pt2.Cubic.cubRes;
-    Results2(j+6,end) = toc;
-    tic
-    Results2(j+9,:) = pt2.GoldenSec.gsRes;
-    Results2(j+9,end) = toc;
+
+    Results2(j+j-1:j+j,:) = pt2.Bisection.biRes;
+    
+    Results2(j+j+5:j+j+6,:) = pt2.Powell.powRes;
+
+    Results2(j+j+11:j+j+12,:) = pt2.Cubic.cubRes;
+
+    Results2(j+j+17:j+j+18,:) = pt2.GoldenSec.gsRes;
+
 j = j+1;    
 end
 %}
 %% Outputs
 % first equation
-Results = [biResults;powellResults;cubicResults;gsResults]
+Results = [biResults;powellResults;cubicResults;gsResults];
 % obj.output = [fn, xn, iterations, sensitivity, FS, xS, toc];
 plotthings = ['^','v','<','>'];
+
 for j = 0:3
     for i = 1:6
         plot(Results(j*6+i,6), Results(j*6+i,5),plotthings(j+1));
     end
 end
 format shortG
-
 % second equation
-%{
+% %{
 Results2
-prtrs2 = [1,2,3,10,11,12];
+prtrs2 = [1,2,3,4,5,6,19,20,21,22,23,24];
 for L = prtrs2
-    if L<=3
+    if L<=6
         j = plotthings(1);
     else
-        j = plotthings(2);
+        j = plotthings(4);
     end
         plot(Results2(L,6), Results2(L,5),j);
 end
-hold off
 %}
+hold off
+legend(["EQ1","Optimal 1","EQ2","Optimal 2","bisection","","","","","","Powells","","","","","","Cubic","","","","","","Golden Section"]);
