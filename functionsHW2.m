@@ -30,8 +30,8 @@ classdef functionsHW2
             iterations  = 0;
             done = 0;
             opt = [obj.optimalVal];
-            highVal = [obj.range(2)];
-            lowVal  = [obj.range(1)];
+            highVal = (obj.range(2));
+            lowVal  = (obj.range(1));
             epsL = [obj.eps];
 
             
@@ -86,9 +86,9 @@ classdef functionsHW2
             f = [obj.func];
             iterations  = 1;
             opt = [obj.optimalVal];
-            highVal = [obj.range(2)];
-            mid = ([obj.range(1)]+ [obj.range(2)]) / 2;
-            lowVal  = [obj.range(1)];
+            highVal = (obj.range(2));
+            mid = ((obj.range(1))+ (obj.range(2))) / 2;
+            lowVal  = (obj.range(1));
             epsL = [obj.eps];
             x1 = highVal;
             x2 = mid;
@@ -96,7 +96,7 @@ classdef functionsHW2
             f1 = polyval(f,x1);
             f2 = polyval(f,x2);
             f3 = polyval(f,x3);
-            a0 = f1;
+            % a0 = f1;
             a1 = (f2-f1)/(x2-x1);
             a2 = ((f3-f1)/(x3-x1) - (f2-f1)/(x2-x1)) / (x3-x2);
             xS = (x1+x2) / 2 - a1/(2*a2);
@@ -117,7 +117,7 @@ classdef functionsHW2
                 f1 = polyval(f,x1);
                 f2 = polyval(f,x2);
                 f3 = polyval(f,x3);
-                a0 = f1;
+                % a0 = f1;
                 a1 = (f2-f1)/(x2-x1);
                 a2 = ((f3-f1)/(x3-x1) - (f2-f1)/(x2-x1)) / (x3-x2);
                 xS = (x1+x2) / 2 - a1/(2*a2);
@@ -145,8 +145,8 @@ classdef functionsHW2
             f = [obj.func];
             iterations  = 0;
             opt = [obj.optimalVal];
-            highVal = [obj.range(2)];
-            lowVal  = [obj.range(1)];
+            highVal = (obj.range(2));
+            lowVal  = (obj.range(1));
             epsL = [obj.eps];
             x1 = lowVal;
             x2 = highVal;
@@ -159,7 +159,7 @@ classdef functionsHW2
                 fp1 = polyval(polyder(f),x1);
                 f2 = polyval(f,x2);
                 fp2 = polyval(polyder(f),x2);
-                a0 = f1;
+                % a0 = f1;
                 a1 = (f2-f1)/(x2-x1);
                 a2 = (fp1-a1)/(x1-x2);
                 a3 = (fp2-a1-a2*(x2-x1))/(x2-x1)^2;
@@ -198,8 +198,8 @@ obj.cubRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
             f = [obj.func];
             iterations  = 0; 
             opt = [obj.optimalVal];
-            highVal = [obj.range(2)];
-            lowVal  = [obj.range(1)];
+            highVal = (obj.range(2));
+            lowVal  = (obj.range(1));
             epsL = [obj.eps];
                 
             xL = lowVal;
@@ -210,9 +210,10 @@ obj.cubRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
             fx1 = polyval(f,x1);
             fx2 = polyval(f,x2);
             n = 100;
-            fn  = 100;
-            xn = 100;
-            exit = [fn > epsL, xn > epsL];
+            % fn  = 100;
+            % xn = 100;
+            table = zeros(n,7);
+            % exit = [fn > epsL, xn > epsL];
             for i = 1:n
             if (xR-xL)>=epsL
 
@@ -220,21 +221,21 @@ obj.cubRes(iter,:) = [fn, xn, iterations, sensitivity, FS, xS, toc];
                     table(i,:) = [iterations, x1, fx1, xL, x1, x2, xR];
                     xR = x2;
                     x2 = x1;
-                    xL=xL;
+                    % xL=xL;
                     x1 = (1-t)*xL+t*xR;
                     
                 else
                     table(i,:) = [iterations, x2, fx2, xL, x1, x2, xR];
                     xL = x1;
                     x1 = x2;
-                    xR=xR;
+                    % xR=xR;
                     x2 = t*xL+(1-t)*xR;
                 end
                 fx1 = polyval(f,x1);
                 fx2 = polyval(f,x2);
                 
                 iterations = iterations + 1;
-                exit = [fn > epsL, xn > epsL];
+                % exit = [fn > epsL, xn > epsL];
             else
                 break
             end
