@@ -1,4 +1,6 @@
 %% Home Work #3
+clc;
+clear;
 
 mainFunction = @(x1,x2) 5 .* x1.^2 + 7 .* x2.^2 - 5 .* x1 - 10 .* x2 .* x1 + x2;
 
