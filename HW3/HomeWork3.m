@@ -18,7 +18,12 @@ LabeLine = [-3 -3 0 0 5 5 10 10 20 20 30 30 50 50 100 100];
 figure(1)
 % contour(fc.XData,fc.YData, fc.ZData, 'ShowText','on');
 [M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine, 'ShowText','on');
+% hold on
 title(func2str(mainFunction))
 xlabel x1
 ylabel x2
 c.LineColor = 'black';
+grid on
+axis equal
+saveas(1, 'HW3_contour.png')
+% hold off
