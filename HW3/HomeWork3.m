@@ -12,8 +12,8 @@ x2INT = [-1,4];
 INT = [x1INT , x2INT];
 fc = fcontour(mF, INT);
 Pt0 = [5 2];
-x1V = Pt0(1,1);
-x2V = Pt0(1,2);
+x1V(1,1) = Pt0(1,1);
+x2V(1,1) = Pt0(1,2);
 LabeLine = [-3 -3 0 0 5 5 10 10 20 20 30 30 50 50 100 100];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,20 +37,56 @@ eqn = 5 *(x01+a*s1)^2 + 7 * (x02+a*s2)^2 ...
 checkEQN = subs(mFsyms, [x1 x2], [x01+a*s1, x02+a*s2]);
 
 
-diffeqA = diff(eqn,a)
-alpha = solve(diffeqA,a)
+diffeqA = diff(eqn,a);
+alpha = solve(diffeqA,a);
 
-s1_EQ = diff(mFsyms, x1)
-s2_EQ = diff(mFsyms, x2)
+s1_EQ = diff(mFsyms, x1);
+s2_EQ = diff(mFsyms, x2);
 
-s1V = subs(diff(mFsyms,x1), [x1 x2], [x1V, x2V])
-s2V = subs(diff(mFsyms,x2), [x1 x2], [x1V, x2V])
+s1V(1,1) = subs(diff(mFsyms,x1), [x1 x2], [x1V, x2V]);
+s2V(1,1) = subs(diff(mFsyms,x2), [x1 x2], [x1V, x2V]);
+a(1,1) = subs(alpha, [x01 x02 s1 s2], [x1V x2V s1V s2V]);
 
-a = subs(alpha, [x01 x02 s1 s2], [x1V x2V s1V s2V])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% iteration 1
+j = 1;
+s1V(j,:) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
+s2V(j,:) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
+a(j,:) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
+%save
+VALS(j,:) = [x1V(j,:) x2V(j,:) a(j,1) s1V(j,1) s2V(j,1)];
+
+answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
+x1V(j+1,1) = answ(1);
+x2V(j+1,1) = answ(2);
 
 
+
+%iteration 2
+j = 2;
+s1V(j,:) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
+s2V(j,:) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
+a(j,:) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
+VALS(j,:) = [x1V(j,:) x2V(j,:) a(j,1) s1V(j,1) s2V(j,1)];
+
+answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
+x1V(j+1,1) = answ(1);
+x2V(j+1,1) = answ(2);
+
+%iteration 3
+j = 3;
+s1V(3,1) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
+s2V(3,1) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
+a(3,1) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
+VALS(j,:) = [x1V(j,:) x2V(j,:) a(j,1) s1V(j,1) s2V(j,1)];
+
+answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
+x1V(j+1,1) = answ(1);
+x2V(j+1,1) = answ(2);
+
+double(VALS)
+[x1V(j+1,1), x2V(j+1,1)]
 
 
 
