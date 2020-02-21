@@ -70,7 +70,7 @@ for j=1:3
 end 
 
 % FIN
-SD = double(VALS);
+SD = double(VALS)
 StD = plot(SD(:,2),SD(:,3));
 
 f(j+1,1) = double(subs(mFsyms, [x1, x2], [x1V(j+1,1), x2V(j+1,1)]));
@@ -147,7 +147,7 @@ xn(3,:) = double(xn(1,:) + aplf(3) .* SN(3,:));
 funct(3,:) = subs(mFsyms,[x1,x2], xn(3,:));
 double([subs(s1_EQ, [x1 x2], xn(3,:)), subs(s2_EQ, [x1 x2],xn(3,:))]);
 
-FR = double([funct,xn,aplf.',SN]);
+FR = double([funct,xn,aplf.',SN])
 FRplt = plot(xn(:,1),xn(:,2));
 
 
@@ -221,38 +221,38 @@ SD1 = [1;0];
 while  AL~=0
 % for a = 1:3
 AL = double(subs(alpha, [x01 x02 s1 s2], ...
-        [X0(1,1) X0(2,1), SD1(1,1), SD1(2,1)]))
+        [X0(1,1) X0(2,1), SD1(1,1), SD1(2,1)]));
     
-X1 = X0 + AL .* SD1
+X1 = X0 + AL .* SD1;
 
 
 AL = double(subs(alpha, [x01 x02 s1 s2], ...
-        [X1(1,1) X1(2,1), SD2(1,1), SD2(2,1)]))
+        [X1(1,1) X1(2,1), SD2(1,1), SD2(2,1)]));
 
 
-X2 = X1 + AL .* SD2
+X2 = X1 + AL .* SD2;
 
 SC = X2 - X0;
 
 AL = double(subs(alpha, [x01 x02 s1 s2], ...
-        [X2(1,1) X2(2,1), SC(1,1), SC(2,1)]))
+        [X2(1,1) X2(2,1), SC(1,1), SC(2,1)]));
 
     
-SAVESTATE(j:j+1,:) = [X0, X1, X2, SD1, SD2, SC]
+SAVESTATE(j:j+1,:) = [X0, X1, X2, SD1, SD2, SC];
 j=j+2;
-X0 = X1
-X1 = X2
-X2 = X2 + AL * SC
+X0 = X1;
+X1 = X2;
+X2 = X2 + AL * SC;
 
-SD1 = SD2
-SD2 = SC
+SD1 = SD2;
+SD2 = SC;
 
 end
 for i = 1:3
-x2PLT(i,:) = [SAVESTATE(i+i-1,3),SAVESTATE(i+i,3)]
+x2PLT(i,:) = [SAVESTATE(i+i-1,3),SAVESTATE(i+i,3)];
 end
-POW = plot(x2PLT(:,1),x2PLT(:,2))
-SAVESTATE;
+POW = plot(x2PLT(:,1),x2PLT(:,2));
+SAVESTATE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% NEWTON
