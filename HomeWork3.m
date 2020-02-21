@@ -26,7 +26,7 @@ ylabel x2
 c.LineColor = 'black';
 grid on
 axis equal
-saveas(1, 'HW3_contour.png');
+
 legend on
 % close(1);
 
@@ -172,11 +172,11 @@ HES = HES + D;
 Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])]);
 alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
         [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]));
-xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j)
+xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j);
 
 
 end
-xn = xn.';
+xn = xn.'
 DFP = plot(xn(:,1),xn(:,2)); 
 
 
@@ -202,9 +202,10 @@ HES = HES + D;
 Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])]);
 alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
         [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]));
-xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j)
+xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j);
 
 end
+xn
 BFGS = plot(xn(1,:),xn(2,:));
 
 
@@ -255,39 +256,44 @@ SAVESTATE;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% NEWTON
 
+DX = diff(mFsyms, x1);
+DY = diff(mFsyms, x2);
+DXX = diff(DX,x1);
+DXY = diff(DX,x2);
+DYY = diff(DY,x2);
+DYX = diff(DY,x1);
+H = [DXX,DXY;...
+    DYX,DYY];
 
+S = inv(H);
+delF = [DX; DY];
+x = 5;
+y = 2;
+loc = [x;y];
 
+for j = 1:3
+loc(:,j+1) = loc(:,j)- subs(S, [x1,x2],[loc(1,j),loc(2,j)]) *...
+            subs(delF,[x1,x2],[loc(1,j),loc(2,j)]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end
+loc
+NEWTON = plot(loc(:,1),loc(:,2));
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Graphing
 
-LVals = [StD, POW, BFGS, DFP, FRplt]; ... ,  , NEWTON
+LVals = [StD, POW, BFGS, DFP, FRplt, NEWTON]; ... ,  , 
 
 
-legend(LVals, 'Steepest', 'Powels', 'BFGS', 'DFP', 'Fletcher')
+legend("location", "northwest")
+legend(LVals, 'Steepest', 'Powels', 'BFGS', 'DFP', 'Fletcher', 'Newton^s')
 
 
 hold off
 
-
+saveas(1, 'HW3_contour.png');
 
 
 
