@@ -18,6 +18,7 @@ LabeLine = [-3 -3 0 0 5 5 10 10 20 20 30 30 50 50 100 100];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(1)
+hold on
 [M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine, 'ShowText','on');
 title(func2str(mF))
 xlabel x1
@@ -26,6 +27,7 @@ c.LineColor = 'black';
 grid on
 axis equal
 saveas(1, 'HW3_contour.png');
+legend on
 % close(1);
 
 
@@ -68,10 +70,11 @@ for j=1:3
 end 
 
 % FIN
-SD = double(VALS)
+SD = double(VALS);
+StD = plot(SD(:,2),SD(:,3));
 
 f(j+1,1) = double(subs(mFsyms, [x1, x2], [x1V(j+1,1), x2V(j+1,1)]));
-double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)])
+double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% fletcher Reeves 
@@ -144,7 +147,8 @@ xn(3,:) = double(xn(1,:) + aplf(3) .* SN(3,:));
 funct(3,:) = subs(mFsyms,[x1,x2], xn(3,:));
 double([subs(s1_EQ, [x1 x2], xn(3,:)), subs(s2_EQ, [x1 x2],xn(3,:))]);
 
-FR = double([funct,xn,aplf.',SN])
+FR = double([funct,xn,aplf.',SN]);
+FRplt = plot(xn(:,1),xn(:,2));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -153,26 +157,27 @@ FR = double([funct,xn,aplf.',SN])
 xn = [x1V(1,1) , x2V(2,1); x2V(1,1), x1V(2,1)];
 % first iteration of DFP-m
 
-HES = eye(2)
+HES = eye(2);
 
 % D = 1/ sig .* P .* p.' - 1/tau .* HES * y .* (H * y).'
 % H1 = H0 + D
-for j=1:3;
-p(:,j) = xn(:,j+1)-xn(:,j) 
+for j=1:3
+p(:,j) = xn(:,j+1)-xn(:,j) ;
 y(:,j) = double([subs(s1_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)]); subs(s2_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)])]...
-               -[subs(s1_EQ, [x1 x2],[xn(1,j),  xn(2,j)]);   subs(s2_EQ, [x1 x2],[xn(1,j),  xn(2,j)])])
-sig(:,j) = p(:,j).' * y(:,j)
-tau(:,j) = y(:,j).' * HES * y(:,j)
-D = 1/ sig(:,j) * p(:,j) * p(:,j).' - 1/tau(:,j) * HES * y(:,j) * (HES * y(:,j)).'
-HES = HES + D
-Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])])
+               -[subs(s1_EQ, [x1 x2],[xn(1,j),  xn(2,j)]);   subs(s2_EQ, [x1 x2],[xn(1,j),  xn(2,j)])]);
+sig(:,j) = p(:,j).' * y(:,j);
+tau(:,j) = y(:,j).' * HES * y(:,j);
+D = 1/ sig(:,j) * p(:,j) * p(:,j).' - 1/tau(:,j) * HES * y(:,j) * (HES * y(:,j)).';
+HES = HES + D;
+Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])]);
 alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
-        [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]))
+        [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]));
 xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j)
 
 
 end
-
+xn = xn.';
+DFP = plot(xn(:,1),xn(:,2)); 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,27 +186,26 @@ end
 xn = [x1V(1,1) , x2V(2,1); x2V(1,1), x1V(2,1)];
 % first iteration of DFP-m
 
-HES = eye(2)
+HES = eye(2);
 
 % D = 1/ sig .* P .* p.' - 1/tau .* HES * y .* (H * y).'
 % H1 = H0 + D
-for j=1:3;
-p(:,j) = xn(:,j+1)-xn(:,j) 
+for j=1:3
+p(:,j) = xn(:,j+1)-xn(:,j);
 y(:,j) = double([subs(s1_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)]); subs(s2_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)])]...
-               -[subs(s1_EQ, [x1 x2],[xn(1,j),  xn(2,j)]);   subs(s2_EQ, [x1 x2],[xn(1,j),  xn(2,j)])])
-sig(:,j) = p(:,j).' * y(:,j)
-tau(:,j) = y(:,j).' * HES * y(:,j)
+               -[subs(s1_EQ, [x1 x2],[xn(1,j),  xn(2,j)]);   subs(s2_EQ, [x1 x2],[xn(1,j),  xn(2,j)])]);
+sig(:,j) = p(:,j).' * y(:,j);
+tau(:,j) = y(:,j).' * HES * y(:,j);
 D = (sig(:,j)+tau(:,j)) / (sig(:,j))^2 * p(:,j) * p(:,j).' ...
     - 1/sig(:,j)*(HES*y(:,j)*p(:,j).' + p(:,j)*(HES*y(:,j)).');
-HES = HES + D
-Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])])
+HES = HES + D;
+Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])]);
 alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
-        [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]))
+        [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]));
 xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j)
 
-
 end
-
+BFGS = plot(xn(1,:),xn(2,:));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.7 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -242,9 +246,11 @@ SD1 = SD2;
 SD2 = SC;
 
 end
-
-
-SAVESTATE
+for i = 1:17
+x2PLT(i,:) = [SAVESTATE(i+i-1,3),SAVESTATE(i+i,3)];
+end
+POW = plot(x2PLT(:,1),x2PLT(:,2));
+SAVESTATE;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% NEWTON
@@ -270,10 +276,16 @@ SAVESTATE
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Graphing
+
+LVals = [StD, POW, BFGS, DFP, FRplt]; ... ,  , NEWTON
 
 
+legend(LVals, 'Steepest', 'Powels', 'BFGS', 'DFP', 'Fletcher')
 
 
+hold off
 
 
 
