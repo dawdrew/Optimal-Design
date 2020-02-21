@@ -49,7 +49,7 @@ a(1,1) = subs(alpha, [x01 x02 s1 s2], [x1V x2V s1V s2V]);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Steepest Descent
+%% Steepest Descent
 % iterations 1:3
 for j=1:3
         
@@ -74,10 +74,80 @@ f(j+1,1) = double(subs(mFsyms, [x1, x2], [x1V(j+1,1), x2V(j+1,1)]));
 double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% fletcher Reeves 
-% 1-d set ip
+%% fletcher Reeves 
 
 % iteration is just S.D.
 
-answ = 
+answ = [subs(s1_EQ, [x1 x2],[x1V(2,1) x2V(2,1)]) ,subs(s2_EQ, [x1 x2],[x1V(2,1) x2V(2,1)]), ...
+        subs(s1_EQ, [x1 x2],[x1V(1,1) x2V(1,1)]) ,subs(s2_EQ, [x1 x2],[x1V(1,1) x2V(1,1)])];
+b = double((answ(1)^2+answ(2)^2)/(answ(3)^2+answ(4)^2))
+sn1 = -(answ(1))+b*answ(3);
+sn2 = -(answ(2))+b*answ(4);
+SN = double([sn1,sn2])
+
+
+% %%%%%% 1-d set ip-- not sure how to do this part
+% Dalph1 = functionsHW2(.001,[1/SN(1) -x1V(2,1)], [1.5,0] ,x1INT);
+% Dalph2 = functionsHW2(.001,[1/SN(2) -x2V(2,1)], [2,  0] ,x2INT);
+% 
+% if Dalph1.GoldenSec.gsRes(end,1)>Dalph2.GoldenSec.gsRes(end,1)
+% %     Dalph1.GoldenSec.gsRes
+%     aplf = Dalph1.GoldenSec.gsRes(end,1)
+% else
+% %     Dalph2.GoldenSec.gsRes
+%     aplf = Dalph2.GoldenSec.gsRes(end,1)
+% end
+% 
+% %%%%% end 1 D solve for alpha
+aplf = double(subs(alpha, [x01 x02 s1 s2], ...
+        [x1V(2,1) x2V(2,1), SN(1), SN(2)]))
+
+
+xn = double([x1V(2,1) x2V(2,1)] + aplf .* SN)
+double([subs(s1_EQ, [x1 x2],xn), subs(s2_EQ, [x1 x2],xn)])
+
+% iteration 2
+
+answ = [subs(s1_EQ, [x1 x2],xn) ,                 subs(s2_EQ, [x1 x2],xn), ...
+        subs(s1_EQ, [x1 x2],[x1V(2,1) x2V(2,1)]) ,subs(s2_EQ, [x1 x2],[x1V(2,1) x2V(2,1)])];
+b(2,:) = double((answ(1)^2+answ(2)^2)/(answ(3)^2+answ(4)^2));
+
+sn1 = -(answ(1))+b*answ(3);
+sn2 = -(answ(2))+b*answ(4);
+SN(2,:) = double([sn1(2), sn2(2)])
+
+
+aplf = double(subs(alpha, [x01 x02 s1 s2], ...
+        [xn(1,1), xn(1,2), SN(2,1), SN(2,2)]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
