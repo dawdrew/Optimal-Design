@@ -68,14 +68,16 @@ for j=1:3
 end 
 
 % FIN
-double(VALS)
+SD = double(VALS)
 
 f(j+1,1) = double(subs(mFsyms, [x1, x2], [x1V(j+1,1), x2V(j+1,1)]));
 double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % fletcher Reeves 
+% 1-d set ip
 
 % iteration is just S.D.
 
+answ = 
 
