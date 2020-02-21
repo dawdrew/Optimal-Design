@@ -54,8 +54,9 @@ for j=1:3
         
     s1V(j,1) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
     s2V(j,1) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
-    a(j,1) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
-    f(j,1) = double(subs(mFsyms, [x1, x2], [x1V(j,1) x2V(j,1)]));
+    a(j,1) = subs(alpha, [x01 x02 s1 s2], ...
+        [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
+    f(j,1) = subs(mFsyms, [x1, x2], [x1V(j,1) x2V(j,1)]);
     %save
     VALS(j,:) = [f(j) x1V(j,1) x2V(j,1) a(j,1) s1V(j,1) s2V(j,1)];
 
@@ -69,5 +70,5 @@ end
 double(VALS)
 
 f(j+1,1) = double(subs(mFsyms, [x1, x2], [x1V(j+1,1), x2V(j+1,1)]));
-[f(j+1,1), x1V(j+1,1), x2V(j+1,1)]
+double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)])
 
