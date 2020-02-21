@@ -49,6 +49,7 @@ a(1,1) = subs(alpha, [x01 x02 s1 s2], [x1V x2V s1V s2V]);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Steepest Descent
 % iterations 1:3
 for j=1:3
         
@@ -71,4 +72,10 @@ double(VALS)
 
 f(j+1,1) = double(subs(mFsyms, [x1, x2], [x1V(j+1,1), x2V(j+1,1)]));
 double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fletcher Reeves 
+
+% iteration is just S.D.
+
 
