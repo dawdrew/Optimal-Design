@@ -197,7 +197,7 @@ y(:,j) = double([subs(s1_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)]); subs(s2_EQ, [x1 x2]
 sig(:,j) = p(:,j).' * y(:,j);
 tau(:,j) = y(:,j).' * HES * y(:,j);
 D = (sig(:,j)+tau(:,j)) / (sig(:,j))^2 * p(:,j) * p(:,j).' ...
-    - 1/sig(:,j)*(HES*y(:,j)*p(:,j).' + p(:,j)*(HES*y(:,j)).');
+    - 1/sig(:,j)*(HES*y(:,j)*p(:,j).' + p(:,j)*(HES*y(:,j)).')
 HES = HES + D;
 Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])]);
 alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
@@ -219,61 +219,62 @@ SD2 = [0;1];
 SD1 = [1;0];
 
 while  AL~=0
+% for a = 1:3
 AL = double(subs(alpha, [x01 x02 s1 s2], ...
-        [X0(1,1) X0(2,1), SD1(1,1), SD1(2,1)]));
+        [X0(1,1) X0(2,1), SD1(1,1), SD1(2,1)]))
     
-X1 = X0 + AL .* SD1;
+X1 = X0 + AL .* SD1
 
 
 AL = double(subs(alpha, [x01 x02 s1 s2], ...
-        [X1(1,1) X1(2,1), SD2(1,1), SD2(2,1)]));
+        [X1(1,1) X1(2,1), SD2(1,1), SD2(2,1)]))
 
 
-X2 = X1 + AL .* SD2;
+X2 = X1 + AL .* SD2
 
 SC = X2 - X0;
 
 AL = double(subs(alpha, [x01 x02 s1 s2], ...
-        [X2(1,1) X2(2,1), SC(1,1), SC(2,1)]));
+        [X2(1,1) X2(2,1), SC(1,1), SC(2,1)]))
 
     
-SAVESTATE(j:j+1,:) = [X0, X1, X2, SD1, SD2, SC];
+SAVESTATE(j:j+1,:) = [X0, X1, X2, SD1, SD2, SC]
 j=j+2;
-X0 = X1;
-X1 = X2;
-X2 = X2 + AL * SC;
+X0 = X1
+X1 = X2
+X2 = X2 + AL * SC
 
-SD1 = SD2;
-SD2 = SC;
+SD1 = SD2
+SD2 = SC
 
 end
-for i = 1:17
-x2PLT(i,:) = [SAVESTATE(i+i-1,3),SAVESTATE(i+i,3)];
+for i = 1:3
+x2PLT(i,:) = [SAVESTATE(i+i-1,3),SAVESTATE(i+i,3)]
 end
-POW = plot(x2PLT(:,1),x2PLT(:,2));
+POW = plot(x2PLT(:,1),x2PLT(:,2))
 SAVESTATE;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% NEWTON
 
-DX = diff(mFsyms, x1);
-DY = diff(mFsyms, x2);
-DXX = diff(DX,x1);
-DXY = diff(DX,x2);
-DYY = diff(DY,x2);
-DYX = diff(DY,x1);
+DX = diff(mFsyms, x1)
+DY = diff(mFsyms, x2)
+DXX = diff(DX,x1)
+DXY = diff(DX,x2)
+DYY = diff(DY,x2)
+DYX = diff(DY,x1)
 H = [DXX,DXY;...
-    DYX,DYY];
+    DYX,DYY]
 
-S = inv(H);
-delF = [DX; DY];
+S = inv(H)
+delF = [DX; DY]
 x = 5;
 y = 2;
 loc = [x;y];
 
 for j = 1:3
 loc(:,j+1) = loc(:,j)- subs(S, [x1,x2],[loc(1,j),loc(2,j)]) *...
-            subs(delF,[x1,x2],[loc(1,j),loc(2,j)]);
+            subs(delF,[x1,x2],[loc(1,j),loc(2,j)])
 
 end
 loc
