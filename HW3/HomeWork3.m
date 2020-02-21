@@ -49,47 +49,21 @@ a(1,1) = subs(alpha, [x01 x02 s1 s2], [x1V x2V s1V s2V]);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% iteration 1
-j = 1;
-s1V(j,:) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
-s2V(j,:) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
-a(j,:) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
-f(j,1) = double(subs(mFsyms, [x1, x2], [x1V(j,1) x2V(j,1)]));
-%save
-VALS(j,:) = [f(j) x1V(j,1) x2V(j,1) a(j,1) s1V(j,1) s2V(j,1)];
+% iterations 1:3
+for j=1:3
+        
+    s1V(j,1) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
+    s2V(j,1) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
+    a(j,1) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
+    f(j,1) = double(subs(mFsyms, [x1, x2], [x1V(j,1) x2V(j,1)]));
+    %save
+    VALS(j,:) = [f(j) x1V(j,1) x2V(j,1) a(j,1) s1V(j,1) s2V(j,1)];
 
-% get next x's
-answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
-x1V(j+1,1) = answ(1);
-x2V(j+1,1) = answ(2);
-
-
-
-%iteration 2
-j = 2;
-s1V(j,:) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
-s2V(j,:) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
-a(j,:) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
-f(j,1) = double(subs(mFsyms, [x1, x2], [x1V(j,1) x2V(j,1)]));
-%save
-VALS(j,:) = [f(j,1) x1V(j,:) x2V(j,:) a(j,1) s1V(j,1) s2V(j,1)];
-% get next x's
-answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
-x1V(j+1,1) = answ(1);
-x2V(j+1,1) = answ(2);
-
-%iteration 3
-j = 3;
-s1V(3,1) = subs(diff(mFsyms,x1), [x1 x2], [x1V(j,1), x2V(j,1)]);
-s2V(3,1) = subs(diff(mFsyms,x2), [x1 x2], [x1V(j,1), x2V(j,1)]);
-a(3,1) = subs(alpha, [x01 x02 s1 s2], [x1V(j,1) x2V(j,1) s1V(j,1) s2V(j,1)]);
-f(j,1) = double(subs(mFsyms, [x1, x2], [x1V(j,1) x2V(j,1)]));
-%save
-VALS(j,:) = [f(j,1) x1V(j,:) x2V(j,:) a(j,1) s1V(j,1) s2V(j,1)];
-% get next x's
-answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
-x1V(j+1,1) = answ(1);
-x2V(j+1,1) = answ(2);
+    % get next x's
+    answ = [x1V(j,1), x2V(j,1)] + a(j,1) .* [s1V(j,1), s2V(j,1)];
+    x1V(j+1,1) = answ(1);
+    x2V(j+1,1) = answ(2);
+end 
 
 % FIN
 double(VALS)
