@@ -148,22 +148,59 @@ FR = double([funct,xn,aplf.',SN])
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% DFP-m
 % SD is first iteration 
-xn = [x1V(1,1) , x2V(1,1); x1V(2,1) , x2V(2,1)];
+xn = [x1V(1,1) , x2V(2,1); x2V(1,1), x1V(2,1)];
 % first iteration of DFP-m
 
 HES = eye(2)
 
-% D = 1/ sig .* P .* p.' - 1/2 .* HES * y .* (H * y).'
+% D = 1/ sig .* P .* p.' - 1/tau .* HES * y .* (H * y).'
+% H1 = H0 + D
+for j=1:3;
+p(:,j) = xn(:,j+1)-xn(:,j) 
+y(:,j) = double([subs(s1_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)]); subs(s2_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)])]...
+               -[subs(s1_EQ, [x1 x2],[xn(1,j),  xn(2,j)]);   subs(s2_EQ, [x1 x2],[xn(1,j),  xn(2,j)])])
+sig(:,j) = p(:,j).' * y(:,j)
+tau(:,j) = y(:,j).' * HES * y(:,j)
+D = 1/ sig(:,j) * p(:,j) * p(:,j).' - 1/tau(:,j) * HES * y(:,j) * (HES * y(:,j)).'
+HES = HES + D
+Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])])
+alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
+        [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]))
+xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j)
 
-p = 
+
+end
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BFGS
+% SD is first iteration 
+xn = [x1V(1,1) , x2V(2,1); x2V(1,1), x1V(2,1)];
+% first iteration of DFP-m
+
+HES = eye(2)
+
+% D = 1/ sig .* P .* p.' - 1/tau .* HES * y .* (H * y).'
+% H1 = H0 + D
+for j=1:3;
+p(:,j) = xn(:,j+1)-xn(:,j) 
+y(:,j) = double([subs(s1_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)]); subs(s2_EQ, [x1 x2],[xn(1,j+1),xn(2,j+1)])]...
+               -[subs(s1_EQ, [x1 x2],[xn(1,j),  xn(2,j)]);   subs(s2_EQ, [x1 x2],[xn(1,j),  xn(2,j)])])
+sig(:,j) = p(:,j).' * y(:,j)
+tau(:,j) = y(:,j).' * HES * y(:,j)
+D = (sig(:,j)+tau(:,j)) / (sig(:,j))^2 * p(:,j) * p(:,j).' ...
+    - 1/sig(:,j)*(HES*y(:,j)*p(:,j).' + p(:,j)*(HES*y(:,j)).');
+HES = HES + D
+Sn(:,j) = HES * double([subs(s1_EQ, [x1 x2],[xn(1,j), xn(2,j)]); subs(s2_EQ, [x1 x2],[xn(1,j), xn(2,j)])])
+alph(:,j) = double(subs(alpha, [x01 x02 s1 s2], ...
+        [xn(1,j+1), xn(2,j+1), Sn(1,j), Sn(2,j)]))
+xn(:,j+2) = xn(:,j+1) + alph(:,j) .* Sn(:,j)
 
 
-
+end
 
 
 
