@@ -80,10 +80,10 @@ double([f(j+1,1), x1V(j+1,1), x2V(j+1,1)])
 
 answ = [subs(s1_EQ, [x1 x2],[x1V(2,1) x2V(2,1)]) ,subs(s2_EQ, [x1 x2],[x1V(2,1) x2V(2,1)]), ...
         subs(s1_EQ, [x1 x2],[x1V(1,1) x2V(1,1)]) ,subs(s2_EQ, [x1 x2],[x1V(1,1) x2V(1,1)])];
-b = double((answ(1)^2+answ(2)^2)/(answ(3)^2+answ(4)^2))
+b = double((answ(1)^2+answ(2)^2)/(answ(3)^2+answ(4)^2));
 sn1 = -(answ(1))+b*answ(3);
 sn2 = -(answ(2))+b*answ(4);
-SN = double([sn1,sn2])
+SN = double([sn1,sn2]);
 
 
 % %%%%%% 1-d set ip-- not sure how to do this part
@@ -100,11 +100,12 @@ SN = double([sn1,sn2])
 % 
 % %%%%% end 1 D solve for alpha
 aplf = double(subs(alpha, [x01 x02 s1 s2], ...
-        [x1V(2,1) x2V(2,1), SN(1), SN(2)]))
+        [x1V(2,1) x2V(2,1), SN(1), SN(2)]));
 
 
-xn = double([x1V(2,1) x2V(2,1)] + aplf .* SN)
-double([subs(s1_EQ, [x1 x2],xn), subs(s2_EQ, [x1 x2],xn)])
+xn = double([x1V(2,1) x2V(2,1)] + aplf .* SN);
+funct = subs(mFsyms,[x1,x2],[xn]);
+double([subs(s1_EQ, [x1 x2],xn), subs(s2_EQ, [x1 x2],xn)]);
 
 % iteration 2
 
@@ -114,19 +115,49 @@ b(2,:) = double((answ(1)^2+answ(2)^2)/(answ(3)^2+answ(4)^2));
 
 sn1 = -(answ(1))+b*answ(3);
 sn2 = -(answ(2))+b*answ(4);
-SN(2,:) = double([sn1(2), sn2(2)])
+SN(2,:) = double([sn1(2), sn2(2)]);
 
 
-aplf = double(subs(alpha, [x01 x02 s1 s2], ...
-        [xn(1,1), xn(1,2), SN(2,1), SN(2,2)]))
+aplf(2) = double(subs(alpha, [x01 x02 s1 s2], ...
+        [xn(1,1), xn(1,2), SN(2,1), SN(2,2)]));
+
+xn(2,:) = double(xn + aplf(2) .* SN(2,:));
+funct(2,:) = subs(mFsyms,[x1,x2],[xn(2,:)]);
+double([subs(s1_EQ, [x1 x2], xn(2,:)), subs(s2_EQ, [x1 x2],xn(2,:))]);
 
 
+% iteration 3
+
+answ = [subs(s1_EQ, [x1 x2],xn(2,:)) ,subs(s2_EQ, [x1 x2],xn(2,:)), ...
+        subs(s1_EQ, [x1 x2],xn(1,:)) ,subs(s2_EQ, [x1 x2],xn(1,:))];
+b(3,:) = double((answ(1)^2+answ(2)^2)/(answ(3)^2+answ(4)^2));
+
+sn1 = -(answ(1))+b*answ(3);
+sn2 = -(answ(2))+b*answ(4);
+SN(3,:) = double([sn1(3), sn2(3)]);
 
 
+aplf(3) = double(subs(alpha, [x01 x02 s1 s2], ...
+        [xn(2,1), xn(2,2), SN(3,1), SN(3,2)]));
+
+xn(3,:) = double(xn(1,:) + aplf(3) .* SN(3,:));
+funct(3,:) = subs(mFsyms,[x1,x2], xn(3,:));
+double([subs(s1_EQ, [x1 x2], xn(3,:)), subs(s2_EQ, [x1 x2],xn(3,:))]);
+
+FR = double([funct,xn,aplf.',SN])
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3.5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% SD is first iteration 
+xn = [x1V(1,1) , x2V(1,1); x1V(2,1) , x2V(2,1)];
+% first iteration of DFP-m
 
+HES = eye(2)
+
+% D = 1/ sig .* P .* p.' - 1/2 .* HES * y .* (H * y).'
+
+p = 
 
 
 
