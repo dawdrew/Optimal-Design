@@ -1,8 +1,9 @@
 %% Homework4
 % andrew Rearson
 
-% clc;
-% clear all; %#ok<CLALL>
+clc;
+clear all; %#ok<CLALL>
+close all;
 format compact
 
 mF = @(x1,x2) 5 .* (x1).^2 + 7 .* (x2).^2 - 3 .* x1...
@@ -30,10 +31,38 @@ xlabel x1
 ylabel x2
 c.LineColor = 'black';
 grid on
-axis equal
-legend on
+% axis equal
+legend
+hold off
 
 g1 = @(x1, x2) 4 .* x1 + 2 .* x2;
 g2 = @(x1, x2) x2;
+figure(2);
+hold on
+fc_g1 = fcontour(g1, INT);
+g1_lim = [1 1 ... 100 100
+    ];
+fc_g2 = fcontour(g2, INT);
+g2_lim = [-2 0.5 ... 0.5... 
+    ];
+hold off
+% close(2);
+figure(1) 
+hold on
+[M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData, g1_lim, 'ShowText','on');
+[M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData, g2_lim,'ShowText','on');
+% [m_2, c_2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData,'ShowText','off');
+close(2);
+c1.DisplayName = "g1";
+c2.DisplayName = "g2";
+c1.LineColor = "#77AC30";
+c2.LineColor = "#77AC30";
+c1.Fill = "on";
+c2.Fill = "on";
+
+
+
+
+
 
 
