@@ -122,10 +122,6 @@ c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
 c2.LineWidth = 2;
-%%%
-% [M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine,'--');
-% c.LineColor = 'black';
-% c.DisplayName = 'GivenFunction';
 hold off
 
 %%%%%%%%%%%%% sub 2: r = 2 %%%%%%%%%%%%%
@@ -230,19 +226,54 @@ figure(fig_43)
 
 %%%%%%%% sub 1: r=1 %%%%%%%%%%%
 RpP1 = subplot(1,2,1);
-rp = 1;
-objFUN2 = @(x1, x2) mF(x1, x2) + rp .* ...
-    (max(0,g1(x1,x2)).^2+ max(0,g2(x1,x2)).^2);
+rpm = 1;
+f=@EXinPENfn;
+objFUN2 = @(x1, x2) mF(x1, x2) + rpm .* ...
+    (f(x1,x2));
 fr1 = fcontour(objFUN2, limits, 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
 fpr1 = contour(fr1.XData,fr1.YData,fr1.ZData,LabeLine,'red','ShowText','on');
 hold on
-title('rp = 1')
+title('rp'' = 1')
  %%old graph stuff here%%
 xlabel x1
 ylabel x2
 grid on
 axis equal
-lgd = legend('rp = 1');
+lgd = legend('rp'' = 1');
+lgd.Location = "southoutside";
+axis(limits); 
+%%%%%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%%%%%
+[M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
+    , g1_lim, 'ShowText','on');
+[M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
+    , g2_lim,'ShowText','on');
+c1.DisplayName = "g1";
+c1r1 = c1;
+c2.DisplayName = "g2";
+c2r1 = c2;
+c1.LineColor = "#77AC30";
+c2.LineColor = "#77AC30";
+c1.LineWidth = 2;
+c2.LineWidth = 2;
+
+hold off
+
+%%%%%%%%%%%%% sub 2: r = 0.1 %%%%%%%%%%%%%
+RpP01 = subplot(1,2,2);
+
+rpm = 0.1;
+objFUN2 = @(x1, x2) mF(x1, x2) + rpm .* ...
+    (g1(x1,x2)+g2(x1,x2));
+fr1 = fcontour(objFUN2, limits, 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
+fpr1 = contour(fr1.XData,fr1.YData,fr1.ZData,LabeLine,'red','ShowText','on');
+hold on
+title('rp'' = 0.1')
+ %%old graph stuff here%%
+xlabel x1
+ylabel x2
+grid on
+axis equal
+lgd = legend('rp'' = 0.1');
 lgd.Location = "southoutside";
 axis(limits); 
 %%%%%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -259,8 +290,6 @@ c2.LineWidth = 2;
 
 hold off
 
-%%%%%%%%%%%%% sub 2: r = .1 %%%%%%%%%%%%%
-RpP01 = subplot(1,2,2);
 
 
 
@@ -272,8 +301,25 @@ RpP01 = subplot(1,2,2);
 
 
 
-
-
-
-
+function gS = EXinPENfn(i,j)
+g1 = @(x1, x2) 4 .* x1 + 2 .* x2-1;
+% g1syms = 4 * x1 + 2 * x2-1;
+g2 = @(x1, x2) -x2+0.5;
+% g2syms = -x2+0.5;
+% for i = limits(1):.1:limits(2)
+%     for j = limira(3):.1:limits(4)
+        if g1(i,j)<= eps %#ok<*IJCL>
+            g1_new=@(i,j) -1/g1(i,j); %#ok<SAGROW>
+        else
+            g1_new=@(i,j) -((2*eps-g1(i,j))/eps^2); %#ok<SAGROW>
+        end
+        if g2(i,j)<= eps
+            g2_new=@(i,j) -1/g2(i,j); %#ok<SAGROW>
+        else
+            g2_new=@(i,j) -((2*eps-g2(i,j))/eps^2); %#ok<SAGROW>
+        end
+        gS =@(i,j) g1_new(i,j)+g2_new(i,j);
+end
+%     end
+% end
 
