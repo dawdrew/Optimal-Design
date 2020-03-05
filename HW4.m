@@ -29,10 +29,10 @@ linelable = [0,2,4,6,10,20,25,50];
 
 figure(fig_given);
 hold on
-[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine, 'ShowText','on');
 title(func2str(mF))
 xlabel x1
 ylabel x2
+[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine, 'ShowText','on');
 c.LineColor = 'black';
 c.DisplayName = func2str(mF);
 grid on
@@ -64,7 +64,6 @@ hold on
     , g1_lim, 'ShowText','on');
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-% close(fig_temp);
 %%%%%%%%%%%%%%%%%%%%%
 figure(fig_given);
 c1.DisplayName = "g1";
@@ -93,53 +92,79 @@ limits = [x1_min x1_max x2_min x2_max];
 figure(fig_42)
 
 
-OG = subplot(1,2,1);
-hold on
+
 
 %%%%%%%% sub 1: r=1 %%%%%%%%%%%
-title('Subplot 1: r = 1')
+RP1 = subplot(1,2,1);
+rp = 1;
+objFUN1 = @(x1, x2) mF(x1, x2) + rp .*...
+    (max(0,g1(x1,x2)).^2+ max(0,g2(x1,x2)).^2);
+fr1 = fcontour(objFUN1, limits, 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
+fpr1 = contour(fr1.XData,fr1.YData,fr1.ZData,LabeLine,'red','ShowText','on');
+hold on
+title('rp = 1')
+ %%old graph stuff here%%
+xlabel x1
+ylabel x2
+grid on
+axis equal
+lgd = legend('rp = 1');
+lgd.Location = "southoutside";
+axis(limits); 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
+    , g1_lim, 'ShowText','on');
+[M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
+    , g2_lim,'ShowText','on');
+c1.DisplayName = "g1";
+c2.DisplayName = "g2";
+c1.LineColor = "#77AC30";
+c2.LineColor = "#77AC30";
+c1.LineWidth = 2;
+c2.LineWidth = 2;
+%%%
+[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine);%, 'ShowText','on');
+c.LineColor = 'black';
+c.DisplayName = func2str(mF);
+hold off
 
-    %%old graph stuff here%%
-    xlabel x1
-    ylabel x2
-    c.LineColor = 'black';
-    c.DisplayName = func2str(mF);
-    grid on
-    axis equal
-    lgd = legend;
-    lgd.Location = "southoutside";
-    axis(limits); 
-rp = 0;
-objFUN1 = @(x1, x2) mF(x1, x2) +rp .*...
-    (max(0,g1(x1,x2).^2)+ max(0,g2(x1,x2).^2));
-colur = ['b','y'];
-n = 1;
-for rp = [1,...10]
-    ]
-% obj1arr = [];
-% x_1arr = [];
-% x_2arr = [];
-% g1arr = [];
-% g2arr = [];
-% for x_2 = limits(3):.1:limits(4)
-% for x_1 = limits(1):.1:limits(2)
-% x_1arr = [x_1arr x_1]; %#ok<AGROW>
-% obj1arr = [obj1arr objFUN1(x_1,x_2,rp)]; %#ok<AGROW>
-% disp(x_1);
-% disp(objFUN1(x_1,x_2,rp));
-% end 
-% end
-% plot(x_1arr, obj1arr);
+%%%%%%%%%%%%% sub 2: r = 2 %%%%%%%%%%%%%
+RP10 = subplot(1,2,2);
+rp = 10;
+objFUN1 = @(x1, x2) mF(x1, x2) + rp .*...
+    (max(0,g1(x1,x2)).^2+ max(0,g2(x1,x2)).^2);
+fr10 = fcontour(objFUN1, limits, 'Visible','off'); %'LineColor','r','DisplayName','ObjFn');
+fpr10 = contour(fr10.XData,fr10.YData,fr10.ZData,LabeLine,'red','ShowText','on');
+hold on
+title('rp = 10')
+ %%old graph stuff here%%
+xlabel x1
+ylabel x2
+grid on
+axis equal
+lgd = legend('Rp = 10');
+lgd.Location = "southoutside";
+axis(limits); 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
+    , g1_lim, 'ShowText','on');
+[M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
+    , g2_lim,'ShowText','on');
+c1.DisplayName = "g1";
+c2.DisplayName = "g2";
+c1.LineColor = "#77AC30";
+c2.LineColor = "#77AC30";
+c1.LineWidth = 2;
+c2.LineWidth = 2;
+%%%
+[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine);%, 'ShowText','on');
+c.LineColor = 'black';
+c.DisplayName = func2str(mF);
 
-fcontour(objFUN1, limits,'LineColor',colur(n),'DisplayName',colur(n));
-% obj1.Visible = 'off';
-% obj1(n).LineColor = colur(n);
-n = n+1;
-end
-%%%%%%%%%%%%% sub 2: r = 2 %%%%%%%%%%
+hold off
 
 
-
+saveas(fig_42, 'HW4_contour_FILLon.png');
 
 
 
