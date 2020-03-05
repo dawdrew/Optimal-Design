@@ -42,17 +42,17 @@ hold off
 
 %%%%%%%%%%%%%%%%
 
-g1 = @(x1, x2) 4 .* x1 + 2 .* x2;
-g2 = @(x1, x2) -x2;
+g1 = @(x1, x2) 4 .* x1 + 2 .* x2-1;
+g2 = @(x1, x2) -x2+0.5;
 
 figure(fig_temp) %%%%%%%%%
 
 hold on
 fc_g1 = fcontour(g1, INT);
-g1_lim = [1 1 ... 100 100
+g1_lim = [0 0  ... 100 100
     ];
 fc_g2 = fcontour(g2, INT);
-g2_lim = [-0.5 -0.5 ... 
+g2_lim = [0 0 ... 
     ];
 hold off
 
@@ -81,17 +81,75 @@ saveas(fig_given, 'HW4_contour_FILLon.png');
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%% 4.2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fig_42 = figure('Name',"Prob_4.2");
-
-figure(fig_42)
+fig_42 = figure('Name',"Prob_4.2",'NumberTitle','off');
 
 x1_max = 1;
 x1_min = -2;
 x2_max = 2;
 x2_min = -1;
-limits = [x1min x1_max x2_min x2_max];
+
+limits = [x1_min x1_max x2_min x2_max];
+
+figure(fig_42)
+
+
 OG = subplot(1,2,1);
-title('Subplot 1: Contour')
+hold on
+
+%%%%%%%% sub 1: r=1 %%%%%%%%%%%
+title('Subplot 1: r = 1')
+
+    %%old graph stuff here%%
+    xlabel x1
+    ylabel x2
+    c.LineColor = 'black';
+    c.DisplayName = func2str(mF);
+    grid on
+    axis equal
+    lgd = legend;
+    lgd.Location = "southoutside";
+    axis(limits); 
+rp = 0;
+objFUN1 = @(x1, x2) mF(x1, x2) +rp .*...
+    (max(0,g1(x1,x2).^2)+ max(0,g2(x1,x2).^2));
+colur = ['b','y'];
+n = 1;
+for rp = [1,...10]
+    ]
+% obj1arr = [];
+% x_1arr = [];
+% x_2arr = [];
+% g1arr = [];
+% g2arr = [];
+% for x_2 = limits(3):.1:limits(4)
+% for x_1 = limits(1):.1:limits(2)
+% x_1arr = [x_1arr x_1]; %#ok<AGROW>
+% obj1arr = [obj1arr objFUN1(x_1,x_2,rp)]; %#ok<AGROW>
+% disp(x_1);
+% disp(objFUN1(x_1,x_2,rp));
+% end 
+% end
+% plot(x_1arr, obj1arr);
+
+fcontour(objFUN1, limits,'LineColor',colur(n),'DisplayName',colur(n));
+% obj1.Visible = 'off';
+% obj1(n).LineColor = colur(n);
+n = n+1;
+end
+%%%%%%%%%%%%% sub 2: r = 2 %%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
