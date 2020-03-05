@@ -43,8 +43,9 @@ hold off
 %%%%%%%%%%%%%%%%
 
 g1 = @(x1, x2) 4 .* x1 + 2 .* x2-1;
+g1syms = 4 * x1 + 2 * x2-1;
 g2 = @(x1, x2) -x2+0.5;
-
+g2syms = -x2+0.5;
 figure(fig_temp) %%%%%%%%%
 
 hold on
@@ -91,9 +92,6 @@ limits = [x1_min x1_max x2_min x2_max];
 
 figure(fig_42)
 
-
-
-
 %%%%%%%% sub 1: r=1 %%%%%%%%%%%
 RP1 = subplot(1,2,1);
 rp = 1;
@@ -111,7 +109,7 @@ axis equal
 lgd = legend('rp = 1');
 lgd.Location = "southoutside";
 axis(limits); 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%%%%%
 [M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
     , g1_lim, 'ShowText','on');
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
@@ -123,7 +121,7 @@ c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
 c2.LineWidth = 2;
 %%%
-[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine);%, 'ShowText','on');
+[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine);
 c.LineColor = 'black';
 c.DisplayName = func2str(mF);
 hold off
@@ -133,7 +131,7 @@ RP10 = subplot(1,2,2);
 rp = 10;
 objFUN1 = @(x1, x2) mF(x1, x2) + rp .*...
     (max(0,g1(x1,x2)).^2+ max(0,g2(x1,x2)).^2);
-fr10 = fcontour(objFUN1, limits, 'Visible','off'); %'LineColor','r','DisplayName','ObjFn');
+fr10 = fcontour(objFUN1, limits, 'Visible','off');
 fpr10 = contour(fr10.XData,fr10.YData,fr10.ZData,LabeLine,'red','ShowText','on');
 hold on
 title('rp = 10')
@@ -145,7 +143,7 @@ axis equal
 lgd = legend('Rp = 10');
 lgd.Location = "southoutside";
 axis(limits); 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%
 [M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
     , g1_lim, 'ShowText','on');
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
@@ -157,12 +155,24 @@ c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
 c2.LineWidth = 2;
 %%%
-[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine);%, 'ShowText','on');
+[M, c] = contour(fc.XData,fc.YData, fc.ZData, LabeLine);
 c.LineColor = 'black';
 c.DisplayName = func2str(mF);
 
 hold off
 
+%%%%%%%%%%%%%%%%%%%%stationaryPTS%%%%%%%%%%%%%%%%%%%%%%
+syms x1 x2 rp
+
+objFUN1_syms =  mFsyms + rp *...
+    (g1syms^2+ g2syms^2);
+dx1 = solve(diff(objFUN1_syms,x1)==0,x2);
+dx2 = solve(diff(objFUN1_syms,x2)==0,x2);
+
+
+
+
+%%%%%%%%%%%%%%%save%%%%%%%%%%%%%%%
 
 saveas(fig_42, 'HW4_contour_FILLon.png');
 
