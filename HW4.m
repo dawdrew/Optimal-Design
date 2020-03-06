@@ -24,7 +24,7 @@ Pt0 = [5 2];
 x1V(1,1) = Pt0(1,1);
 x2V(1,1) = Pt0(1,2);
 LabeLine = [0 0 2 2 4 4 6 6 10 10 15 15 20 20 25 25 50 50];
-linelable = [0,2,4,6,10,20,25,50];
+% linelable = [0,2,4,6,10,20,25,50];
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%% 4.1 Graphs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -170,7 +170,7 @@ dx2 = solve(diff(objFUN1_syms,x2)==0,x2)
 
 
 ONLYx1 = subs(dx1,x2,dx2)
-x1_in_rp = solve(ONLYx1,x1)
+x1_in_rp = solve(x1==ONLYx1,x1)
 % ONLYx2 = subs(dx2,x1,dx1)
 % x2_in_rp = solve(ONLYx2,x2)
 
@@ -186,17 +186,21 @@ x2_from_i = double(subs(dx2, [x1,rp_],[x1_stat_inf,9999999999999999]))
 
 subplot(RP1)
 hold on
-plot(x1_stat_1,x2_from_1,'Marker','*','DisplayName','rp = 1',...
-    'MarkerSize',10,'Color','#D95319')
-plot(x1_stat_inf,x2_from_i,'Marker','*','DisplayName','rp = 00',...
-    'MarkerSize',10,'Color','w')
+plot(x1_stat_1,x2_from_1,'Marker','*',...
+    'DisplayName',sprintf('rp = 1 @ %.3g, %.3g',x1_stat_1,x2_from_1),...
+    'MarkerSize',20,'Color','#D95319')
+plot(x1_stat_inf,x2_from_i,'Marker','*',...
+    'DisplayName',sprintf('rp = inf @ %.3g, %.3g',x1_stat_inf,x2_from_i),...
+    'MarkerSize',20,'Color','w')
 hold off
 subplot(RP10)
 hold on
-plot(x1_stat_10,x1_stat_10,'Marker','*','DisplayName','rp = 1',...
-    'MarkerSize',10,'Color','#D95319')
-plot(x1_stat_inf,x2_from_i,'Marker','*','DisplayName','rp = 00',...
-    'MarkerSize',10,'Color','w')
+plot(x1_stat_10,x2_from_10,'Marker','*',...
+    'DisplayName',sprintf('rp = 10 @ %.3g, %.3g',x1_stat_10,x2_from_10),...
+    'MarkerSize',20,'Color','#D95319')
+plot(x1_stat_inf,x2_from_i,'Marker','*',...
+    'DisplayName',sprintf('rp = inf @ %.3g, %.3g',x1_stat_inf,x2_from_i),...
+    'MarkerSize',20,'Color','w')
 hold off
 
 %%%%%%%%%%%%%%% save %%%%%%%%%%%%%%%
@@ -311,19 +315,20 @@ for rpp = [1,0.1]
     subplot(pl(x))
     hold on
     plot(small(1),small(2),'Marker','*','DisplayName',...
-        sprintf('rp_min %g',rpp),...
-        'MarkerSize',10,'Color','b'); 
-    sprintf('rp found at: x1 %g ,  x2 %g',small(1),small(2))
+        sprintf('rp''_m_i_n %.3g @ %.3g,%.3g',rpp,small),...
+        'MarkerSize',20,'Color','b'); 
+    fprintf('rp found at: x1 %.3g ,  x2 %.3g \n',small(1),small(2))
     x=x+1;
     hold off
 end
 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%% ALM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+lam1 = [3;24];
+lam2 = [-5;-5];
 
-
-
+A = @(x1,x2,lam11,lam12,lam21,lam22,rp) mF(x1,x2) ;
 
 
 
