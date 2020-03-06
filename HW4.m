@@ -330,44 +330,146 @@ subplot(pl(2))
 c1.Fill = 'on';
 c2.Fill = 'on';
 hold off
-saveas(fig_42, 'HW4_4-3_FILLon.png');
+saveas(fig_43, 'HW4_4-3_FILLon.png');
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%% 4.4 ALM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-rp = 1;
+fig_44 = figure('Name',"Prob_4.4",'NumberTitle','off');
+figure(fig_44)
+lamPLT1 = subplot(1,2,1);
+subplot(lamPLT1)
+limits = [-1 1 -1 1.5];
+hold on
+title('Given Lamda {3,24}')
+xlabel x1
+ylabel x2
+grid on
+axis equal
+lgd = legend;
+lgd.Location = "southoutside";
+axis(limits); 
+%%%%%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%%%%%
+[M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
+    , g1_lim, 'ShowText','on'); %#ok<*ASGLU>
+[M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
+    , g2_lim,'ShowText','on');
+c1.DisplayName = "g1";
+c1r1 = c1;
+c2.DisplayName = "g2";
+c2r1 = c2;
+c1.LineColor = "#77AC30";
+c2.LineColor = "#77AC30";
+c1.LineWidth = 2;
+c2.LineWidth = 2;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RP = 1;
 lam1 = [3;24];
 lam2 = [-5;-5];
-trid1 = @(x1,x2,l1) max(g1(x1,x2),-l1/(2*rp));
+% trid1 = @(x1,x2,l1) max(g1(x1,x2),-l1/(2* rp));
 tr1sym = g1syms;
 tr2sym = g2syms;
-trid2 = @(x1,x2,l2) max(g2(x1,x2),-l2/(2*rp));
-syms x1 x2 l1 l2
-A =...
-    mFsyms+(l1*tr1sym)+l2*tr2sym;
+% trid2 = @(x1,x2,l2) max(g2(x1,x2),-l2/(2* rp));
+% lam11 = lam1(1);
+% lam12 = lam1(2);
+syms x1 x2 L T
+for x_squiggle = 1:6
+A = mFsyms+(L * tr1sym + rp_ * tr1sym^2)+ (T * tr2sym + rp_ * tr2sym^2);
 
-dx1_A = solve(diff(A,x1) == 0,x1)
-dx2_A = solve(diff(A,x2) == 0,x2)
-x1_new = solve(subs(dx1_A,[x2,l1,l2],...
-                            [dx2_A,lam1(1),lam1(2)])==x1,x1)
-x2_new = solve(subs(dx2_A,[x1,l1,l2],...
-                            [x1_new,lam1(1),lam1(2)])==x2,x2)
+dx1_A = solve(diff(A,x1) == 0,x1);
+dx2_A = solve(diff(A,x2) == 0,x2);
 
 
+x1_interum = vpa(solve(subs(dx1_A, x2,...
+                            dx2_A)==x1,x1));
+x1_new = vpa(subs(x1_interum,[L,T,rp_],...
+                             [lam1(1,1),lam1(2,1),RP]));
+x2_new = vpa(solve(subs(dx2_A,[x1,L,T,rp_],...
+                            [x1_new,lam1(1,1),lam1(2,1),RP])...
+                            ==x2,x2));
+lam1 = [lam1(1,1)+2*RP*g1(x1_new,x2_new);lam1(2,1)+2*RP*g2(x1_new,x2_new)];
+xes(:,x_squiggle) = [x1_new;x2_new];
+plot(x1_new,x2_new,'Marker','*','DisplayName',...
+        sprintf('x_n_e_w #%i @ %.3g,%.3g',x_squiggle,x1_new,x2_new),...
+        'MarkerSize',20,'Color','b'); 
+end
+plot(xes(1,:).',xes(2,:).','DisplayName','Path')
 
 
-% differentate (gradient) x1 and x2 
-% get x1 and x2
+
+hold off
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+lamPLT2 = subplot(1,2,2);
+subplot(lamPLT2)
+hold on
+title('Given Lamda {-5-5}')
+xlabel x1
+ylabel x2
+grid on
+axis equal
+lgd = legend;
+lgd.Location = "southoutside";
+axis(limits); 
+%%%%%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%%%%%
+[M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
+    , g1_lim, 'ShowText','on'); %#ok<*ASGLU>
+[M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
+    , g2_lim,'ShowText','on');
+c1.DisplayName = "g1";
+c2.DisplayName = "g2";
+c1.LineColor = "#77AC30";
+c2.LineColor = "#77AC30";
+c1.LineWidth = 2;
+c2.LineWidth = 2;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+RP = 1;
+% trid1 = @(x1,x2,l1) max(g1(x1,x2),-l1/(2* rp));
+tr1sym = g1syms;
+tr2sym = g2syms;
+% trid2 = @(x1,x2,l2) max(g2(x1,x2),-l2/(2* rp));
+syms x1 x2 L T
+for x_squiggle = 1:6
+A = mFsyms+(L * tr1sym + rp_ * tr1sym^2)+ (T * tr2sym + rp_ * tr2sym^2);
+
+dx1_A = solve(diff(A,x1) == 0,x1);
+dx2_A = solve(diff(A,x2) == 0,x2);
+
+
+x1_interum = vpa(solve(subs(dx1_A, x2,...
+                            dx2_A)==x1,x1));
+x1_new = vpa(subs(x1_interum,[L,T,rp_],...
+                             [lam2(1,1),lam2(2,1),RP]));
+x2_new = vpa(solve(subs(dx2_A,[x1,L,T,rp_],...
+                            [x1_new,lam2(1,1),lam2(2,1),RP])...
+                            ==x2,x2));
+
+lam2 = [lam2(1,1)+2*RP*g1(x1_new,x2_new);lam2(2,1)+2*RP*g2(x1_new,x2_new)];
+xes(:,x_squiggle) = [x1_new;x2_new];
+plot(x1_new,x2_new,'Marker','*','DisplayName',...
+        sprintf('x_n_e_w #%i @ %.3g,%.3g',x_squiggle,x1_new,x2_new),...
+        'MarkerSize',20,'Color','b'); 
+end
+plot(xes(1,:).',xes(2,:).','DisplayName','Path')
 
 
 
+hold off
 
-
-
-
-
+pl = [lamPLT1,lamPLT2];
+saveas(fig_44, 'HW4_4-4_FILLoff.png');
+subplot(pl(1))
+hold on
+c1r1.Fill = 'on';
+c2r1.Fill = 'on';
+subplot(pl(2))
+c1.Fill = 'on';
+c2.Fill = 'on';
+hold off
+saveas(fig_44, 'HW4_4-4_FILLon.png');
 
 
 
