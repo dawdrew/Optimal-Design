@@ -223,7 +223,7 @@ x1_max = .5;
 x1_min = -2;
 x2_max = 2;
 x2_min = -1;
-eps = -.005;
+eps = -.05;
 
 limits = [x1_min x1_max x2_min x2_max];
 
@@ -270,7 +270,7 @@ rpm = 0.1;
 f=@EXinPENfn;
 objFUN2 = @(x1, x2) mF(x1, x2) + rpm .* ...
     f(x1,x2,eps);
-fr1 = fcontour(objFUN2, limits, 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
+fr1 = fcontour(objFUN2, limits); ..., 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
 fpr1 = contour(fr1.XData,fr1.YData,fr1.ZData,LabeLine,'red','ShowText','on');
 hold on
 title('rp'' = 0.1')
@@ -321,20 +321,42 @@ for rpp = [1,0.1]
     x=x+1;
     hold off
 end
+saveas(fig_43, 'HW4_4-3_FILLoff.png');
+subplot(pl(1))
+hold on
+c1r1.Fill = 'on';
+c2r1.Fill = 'on';
+subplot(pl(2))
+c1.Fill = 'on';
+c2.Fill = 'on';
+hold off
+saveas(fig_42, 'HW4_4-3_FILLon.png');
 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%% ALM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-rp = 
+%% %%%%%%%%%%%%%%%%%%%%%%%%% 4.4 ALM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+rp = 1;
 lam1 = [3;24];
 lam2 = [-5;-5];
-trid1 = @(x1,x2,l1) max(g1(x1,x2),l1);
-trid2 = @(x1,x2,l2) max(g2(x1,x2),l2);
+trid1 = @(x1,x2,l1) max(g1(x1,x2),-l1/(2*rp));
+tr1sym = g1syms;
+tr2sym = g2syms;
+trid2 = @(x1,x2,l2) max(g2(x1,x2),-l2/(2*rp));
+syms x1 x2 l1 l2
+A =...
+    mFsyms+(l1*tr1sym)+l2*tr2sym;
 
-A = @(x1,x2,l1,l2)...
-    mF(x1,x2)+...
-    trid1(;
+dx1_A = solve(diff(A,x1) == 0,x1)
+dx2_A = solve(diff(A,x2) == 0,x2)
+x1_new = solve(subs(dx1_A,[x2,l1,l2],...
+                            [dx2_A,lam1(1),lam1(2)])==x1,x1)
+x2_new = solve(subs(dx2_A,[x1,l1,l2],...
+                            [x1_new,lam1(1),lam1(2)])==x2,x2)
 
 
+
+
+% differentate (gradient) x1 and x2 
+% get x1 and x2
 
 
 
@@ -354,11 +376,8 @@ A = @(x1,x2,l1,l2)...
 %% function(s)
 function gS = EXinPENfn(i,j,eps)
 g1 = @(x1, x2) 4 .* x1 + 2 .* x2-1;
-% g1syms = 4 * x1 + 2 * x2-1;
 g2 = @(x1, x2) -x2+0.5;
-% g2syms = -x2+0.5;
-% for i = limits(1):.1:limits(2)
-%     for j = limira(3):.1:limits(4)
+
         if g1(i,j)<= eps %#ok<*IJCL>
             g1_new=@(i,j) -1./g1(i,j);
         else
@@ -369,9 +388,7 @@ g2 = @(x1, x2) -x2+0.5;
         else
             g2_new=@(i,j) -((2.*eps-g2(i,j))./eps^2);
         end
-        gS =...@(i,j) 
-            g1_new(i,j)+g2_new(i,j);
+        gS = g1_new(i,j)+g2_new(i,j);
 end
-%     end
-% end
+
 
