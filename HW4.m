@@ -6,6 +6,7 @@ clear all; %#ok<CLALL>
 close all;
 format compact
 
+
 mF = @(x1,x2) 5 .* (x1).^2 + 7 .* (x2).^2 - 3 .* x1...
     - 4 .* x2 .* x1 + 2 .* x2;
 syms x1 x2 x01 x02 a s1 s2
@@ -198,7 +199,7 @@ plot(x1_stat_inf,x2_from_i,'Marker','*','DisplayName','rp = 00',...
     'MarkerSize',10,'Color','w')
 hold off
 
-%%%%%%%%%%%%%%%save%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% save %%%%%%%%%%%%%%%
 
 saveas(fig_42, 'HW4_4-2_FILLoff.png');
 subplot(RP1)
@@ -228,9 +229,9 @@ figure(fig_43)
 RpP1 = subplot(1,2,1);
 rpm = 1;
 f=@EXinPENfn;
-objFUN2 = @(x1, x2) mF(x1, x2) + rpm .* ...
-    (f(x1,x2));
-fr1 = fcontour(objFUN2, limits, 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
+objFUN2 = @(x1, x2) mF(x1, x2) + rpm .* (f(x1,x2,eps));
+% fminunc(objFUN2,[0 0])
+fr1 = fcontour(objFUN2, limits, 'Visible','off');
 fpr1 = contour(fr1.XData,fr1.YData,fr1.ZData,LabeLine,'red','ShowText','on');
 hold on
 title('rp'' = 1')
@@ -244,7 +245,7 @@ lgd.Location = "southoutside";
 axis(limits); 
 %%%%%%%%%%%%%%%%%old pts%%%%%%%%%%%%%%%%%%%%%%%%%%
 [M1, c1] = contour(fc_g1.XData,fc_g1.YData, fc_g1.ZData ...
-    , g1_lim, 'ShowText','on');
+    , g1_lim, 'ShowText','on'); %#ok<*ASGLU>
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
 c1.DisplayName = "g1";
@@ -262,8 +263,9 @@ hold off
 RpP01 = subplot(1,2,2);
 
 rpm = 0.1;
+f=@EXinPENfn;
 objFUN2 = @(x1, x2) mF(x1, x2) + rpm .* ...
-    (g1(x1,x2)+g2(x1,x2));
+    f(x1,x2,eps);
 fr1 = fcontour(objFUN2, limits, 'Visible','off'); ...'LineColor','r','DisplayName','ObjFn');
 fpr1 = contour(fr1.XData,fr1.YData,fr1.ZData,LabeLine,'red','ShowText','on');
 hold on
@@ -291,6 +293,33 @@ c2.LineWidth = 2;
 hold off
 
 
+%%%%%%%%%%%%%%%%%%%% Solve for pts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pl = [RpP1,RpP01];
+x = 1;
+for rpp = [1,0.1]
+    small = [-10,10];
+    objFUN2 = @(x1, x2) mF(x1, x2) + rpp .* ...
+        f(x1,x2,eps);    
+    for i1 = limits(1):.01:limits(2)
+        for i2 = limits(3):.01:limits(4)
+            if objFUN2(small(1),small(2)) > objFUN2(i1,i2)
+                small = [i1 i2];
+
+            end
+        end
+    end
+    subplot(pl(x))
+    hold on
+    plot(small(1),small(2),'Marker','*','DisplayName',...
+        sprintf('rp_min %g',rpp),...
+        'MarkerSize',10,'Color','b'); 
+    sprintf('rp found at: x1 %g ,  x2 %g',small(1),small(2))
+    x=x+1;
+    hold off
+end
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -301,7 +330,20 @@ hold off
 
 
 
-function gS = EXinPENfn(i,j)
+
+
+
+
+
+
+
+
+
+
+
+
+%% function(s)
+function gS = EXinPENfn(i,j,eps)
 g1 = @(x1, x2) 4 .* x1 + 2 .* x2-1;
 % g1syms = 4 * x1 + 2 * x2-1;
 g2 = @(x1, x2) -x2+0.5;
@@ -309,16 +351,17 @@ g2 = @(x1, x2) -x2+0.5;
 % for i = limits(1):.1:limits(2)
 %     for j = limira(3):.1:limits(4)
         if g1(i,j)<= eps %#ok<*IJCL>
-            g1_new=@(i,j) -1/g1(i,j); %#ok<SAGROW>
+            g1_new=@(i,j) -1./g1(i,j);
         else
-            g1_new=@(i,j) -((2*eps-g1(i,j))/eps^2); %#ok<SAGROW>
+            g1_new=@(i,j) -((2.*eps-g1(i,j))./eps^2);
         end
         if g2(i,j)<= eps
-            g2_new=@(i,j) -1/g2(i,j); %#ok<SAGROW>
+            g2_new=@(i,j) -1./g2(i,j);
         else
-            g2_new=@(i,j) -((2*eps-g2(i,j))/eps^2); %#ok<SAGROW>
+            g2_new=@(i,j) -((2.*eps-g2(i,j))./eps^2);
         end
-        gS =@(i,j) g1_new(i,j)+g2_new(i,j);
+        gS =...@(i,j) 
+            g1_new(i,j)+g2_new(i,j);
 end
 %     end
 % end
