@@ -68,8 +68,8 @@ hold on
     , g2_lim,'ShowText','on');
 %%%%%%%%%%%%%%%%%%%%%
 figure(fig_given);
-c1.DisplayName = "g1";
-c2.DisplayName = "g2";
+c1.DisplayName = "g1 = 0";
+c2.DisplayName = "g2 = 0";
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
@@ -115,9 +115,9 @@ axis(limits);
     , g1_lim, 'ShowText','on');
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-c1.DisplayName = "g1";
+c1.DisplayName = "g1 = 0";
 c1r1 = c1;
-c2.DisplayName = "g2";
+c2.DisplayName = "g2 = 0";
 c2r1 = c2;
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
@@ -147,8 +147,8 @@ axis(limits);
     , g1_lim, 'ShowText','on');
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-c1.DisplayName = "g1";
-c2.DisplayName = "g2";
+c1.DisplayName = "g1 = 0";
+c2.DisplayName = "g2 = 0";
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
@@ -252,9 +252,9 @@ axis(limits);
     , g1_lim, 'ShowText','on'); %#ok<*ASGLU>
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-c1.DisplayName = "g1";
+c1.DisplayName = "g1 = 0";
 c1r1 = c1;
-c2.DisplayName = "g2";
+c2.DisplayName = "g2 = 0";
 c2r1 = c2;
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
@@ -287,8 +287,8 @@ axis(limits);
     , g1_lim, 'ShowText','on');
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-c1.DisplayName = "g1";
-c2.DisplayName = "g2";
+c1.DisplayName = "g1 = 0";
+c2.DisplayName = "g2 = 0";
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
@@ -300,7 +300,7 @@ hold off
 %%%%%%%%%%%%%%%%%%%% Solve for pts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 pl = [RpP1,RpP01];
 x = 1;
-for rpp = [1,0.1]
+for rpp = [1,0.1,.0000001]
     small = [-10,10];
     objFUN2 = @(x1, x2) mF(x1, x2) + rpp .* ...
         f(x1,x2,eps);    
@@ -312,7 +312,9 @@ for rpp = [1,0.1]
             end
         end
     end
+    if x<2
     subplot(pl(x))
+    end
     hold on
     plot(small(1),small(2),'Marker','*','DisplayName',...
         sprintf('rp''_m_i_n %.3g @ %.3g,%.3g',rpp,small),...
@@ -321,6 +323,14 @@ for rpp = [1,0.1]
     x=x+1;
     hold off
 end
+% for x = [1,2]
+%    subplot(pl(x))
+%    hold on
+%    plot(small(1),small(2),'Marker','*','DisplayName',...
+%         sprintf('rp''_i_n_f @ %.3g,%.3g',small),...
+%         'MarkerSize',20,'Color','w'); 
+%    hold off
+% end
 saveas(fig_43, 'HW4_4-3_FILLoff.png');
 subplot(pl(1))
 hold on
@@ -353,9 +363,9 @@ axis(limits);
     , g1_lim, 'ShowText','on'); %#ok<*ASGLU>
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-c1.DisplayName = "g1";
+c1.DisplayName = "g1 = 0";
 c1r1 = c1;
-c2.DisplayName = "g2";
+c2.DisplayName = "g2 = 0";
 c2r1 = c2;
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
@@ -380,13 +390,13 @@ dx2_A = solve(diff(A,x2) == 0,x2);
 
 
 x1_interum = vpa(solve(subs(dx1_A, x2,...
-                            dx2_A)==x1,x1));
+                            dx2_A)==x1,x1))
 x1_new = vpa(subs(x1_interum,[L,T,rp_],...
-                             [lam1(1,1),lam1(2,1),RP]));
+                             [lam1(1,1),lam1(2,1),RP]))
 x2_new = vpa(solve(subs(dx2_A,[x1,L,T,rp_],...
                             [x1_new,lam1(1,1),lam1(2,1),RP])...
-                            ==x2,x2));
-lam1 = [lam1(1,1)+2*RP*g1(x1_new,x2_new);lam1(2,1)+2*RP*g2(x1_new,x2_new)];
+                            ==x2,x2))
+lam1 = [lam1(1,1)+2*RP*g1(x1_new,x2_new);lam1(2,1)+2*RP*g2(x1_new,x2_new)]
 xes(:,x_squiggle) = [x1_new;x2_new];
 plot(x1_new,x2_new,'Marker','*','DisplayName',...
         sprintf('x_n_e_w #%i @ %.3g,%.3g',x_squiggle,x1_new,x2_new),...
@@ -417,8 +427,8 @@ axis(limits);
     , g1_lim, 'ShowText','on'); %#ok<*ASGLU>
 [M2, c2] = contour(fc_g2.XData,fc_g2.YData, fc_g2.ZData ...
     , g2_lim,'ShowText','on');
-c1.DisplayName = "g1";
-c2.DisplayName = "g2";
+c1.DisplayName = "g1 = 0";
+c2.DisplayName = "g2 = 0";
 c1.LineColor = "#77AC30";
 c2.LineColor = "#77AC30";
 c1.LineWidth = 2;
