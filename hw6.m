@@ -12,8 +12,8 @@ mF = @(x1,x2) -1*x1 / 2 - 3 * x2 / 2;
 % mFsyms =      5 .* (x1).^2 + 7 .* (x2).^2 - 3 .* x1...
 %     - 4 .* x2 .* x1 + 2 .* x2;
 
-x1INT = [-5,20];
-x2INT = [-5,20];
+x1INT = [2.5,6.5];
+x2INT = [0,5.5];
 INT = [x1INT , x2INT];
 fig_given = figure('Name',"GivenInfo_6",'NumberTitle','off');
 fig_temp = figure('Name',"Temp",'NumberTitle','off');
@@ -23,7 +23,7 @@ fc = fcontour(mF, INT);
 % Pt0 = [5 2];
 % x1V(1,1) = Pt0(1,1);
 % x2V(1,1) = Pt0(1,2);
-LabeLine = [-2 -2 -3 -3 -4 -4 -5 -5 -6 -6 -7 -7 -8 -8 -9 -9 -10 -10 -10 -11 -11 -12 -12 -13 -13 -14 -14];
+LabeLine = [0 0 -1 -1 -2 -2 -3 -3 -4 -4 -5 -5 -6 -6 -7 -7 -8 -8 -9 -9 -10 -10 -10 -11 -11 -12 -12 -13 -13 -14 -14];
 % linelable = [0,2,4,6,10,20,25,50];
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%% 4.1 Graphs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,3 +89,58 @@ c2.Fill = "on";
 % c3.Fill = "on";
 saveas(fig_given, 'HW6_contour_FILLon.png');
 % close(1)
+
+point1_1= 5.5;
+point1_2= 1.5;
+point2_1= 6;
+point2_2= 2;
+point3_1= 5.5;
+point3_2= 2.5;
+
+plot(point1_1,point1_2,'Marker','.','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',1,point1_1,point1_2),...
+        'MarkerSize',20,'Color','red');
+plot(point2_1,point2_2,'Marker','.','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',2,point2_1,point2_2),...
+        'MarkerSize',20,'Color','blue');
+plot(point3_1,point3_2,'Marker','.','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',3,point3_1,point3_2),...
+        'MarkerSize',20,'Color','green');
+saveas(fig_given, 'HW6_2.png');
+    
+point1_1= 5.5;
+point1_2= 1.423;
+point2_1= 5.435;
+point2_2= 1.923;
+point3_1= 5.069;
+point3_2= 2.423;
+
+plot(point1_1,point1_2,'Marker','o','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',1,point1_1,point1_2),...
+        'MarkerSize',10,'Color','red');
+plot(point2_1,point2_2,'Marker','o','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',2,point2_1,point2_2),...
+        'MarkerSize',10,'Color','blue');
+plot(point3_1,point3_2,'Marker','o','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',3,point3_1,point3_2),...
+        'MarkerSize',10,'Color','green');
+
+    saveas(fig_given, 'HW6_3.png');
+point1_1= 5;
+point1_2= 1;
+point2_1= 6;
+point2_2= 2;
+point3_1= 3;
+point3_2= 5;
+
+
+plot(point1_1,point1_2,'Marker','*','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',1,point1_1,point1_2),...
+        'MarkerSize',20,'Color','red');
+plot(point2_1,point2_2,'Marker','*','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',2,point2_1,point2_2),...
+        'MarkerSize',20,'Color','blue');
+plot(point3_1,point3_2,'Marker','*','DisplayName',...
+        sprintf('Iteration #%i @ %.3g,%.3g',3,point3_1,point3_2),...
+        'MarkerSize',20,'Color','green');
+saveas(fig_given, 'HW6_4.png');
